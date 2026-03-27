@@ -83,6 +83,8 @@ export default function TiendaGamer() {
 
   return (
     <div className="min-h-screen bg-[#0B0F19] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#0B0F19] via-[#0B0F19] to-black pt-24 pb-10">
+      
+      {/* 🟢 HERO: Asegúrate de que los JSON tengan el texto "Kamas" */}
       <StoreHero storeStatus={storeStatus} />
 
       <div className="w-full max-w-6xl mx-auto px-6 mb-8 space-y-6">
@@ -115,11 +117,9 @@ export default function TiendaGamer() {
         ) : activeCategory === 'eventos' ? (
           <div className="space-y-8">
             <div className="text-center">
+              {/* 🟢 TÍTULO SEO SEGURO */}
               <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-[0.04em]">
-                {t('events_zone').split(' ')[0]}{' '}
-                <span className="text-[#00A8FF] drop-shadow-[0_0_14px_rgba(0,168,255,0.25)]">
-                  {t('events_zone').split(' ')[1]}
-                </span>
+                {t('events_zone')}
               </h2>
               <p className="text-gray-400 mt-3 text-sm md:text-base tracking-[0.04em]">
                 {t('events_sub')}
@@ -155,45 +155,51 @@ export default function TiendaGamer() {
         )}
       </div>
 
-      {/* MODALES CON PROPS COMPLETAS */}
-      <ProductModal
-        selectedProduct={selectedProduct}
-        selectedVariant={selectedVariant}
-        setSelectedVariant={setSelectedVariant}
-        step={step}
-        setStep={setStep}
-        selectedPayment={selectedPayment}
-        setSelectedPayment={setSelectedPayment}
-        payments={payments}
-        userProfile={userProfile}
-        isWalletProduct={isWalletProduct}
-        walletAmount={walletAmount}
-        setWalletAmount={setWalletAmount}
-        rates={rates}
-        resetModals={resetModals}
-        isCopied={isCopied}
-        setIsCopied={setIsCopied}
-        paymentDetails={paymentDetails}
-        setPaymentDetails={setPaymentDetails}
-        customerPhone={customerPhone}
-        setCustomerPhone={setCustomerPhone}
-        walletReceiverEmail={walletReceiverEmail}
-        setWalletReceiverEmail={setWalletReceiverEmail}
-        paymentDetailLabel={paymentDetailLabel}
-        paymentDetailPlaceholder={paymentDetailPlaceholder}
-        handleFinalOrder={handleFinalOrder}
-      />
+      {/* 🔴 CORRECCIÓN CRÍTICA PARA VERCEL:
+          Solo renderizar el modal si hay un producto seleccionado 
+      */}
+      {selectedProduct && (
+        <ProductModal
+          selectedProduct={selectedProduct}
+          selectedVariant={selectedVariant}
+          setSelectedVariant={setSelectedVariant}
+          step={step}
+          setStep={setStep}
+          selectedPayment={selectedPayment}
+          setSelectedPayment={setSelectedPayment}
+          payments={payments}
+          userProfile={userProfile}
+          isWalletProduct={isWalletProduct}
+          walletAmount={walletAmount}
+          setWalletAmount={setWalletAmount}
+          rates={rates}
+          resetModals={resetModals}
+          isCopied={isCopied}
+          setIsCopied={setIsCopied}
+          paymentDetails={paymentDetails}
+          setPaymentDetails={setPaymentDetails}
+          customerPhone={customerPhone}
+          setCustomerPhone={setCustomerPhone}
+          walletReceiverEmail={walletReceiverEmail}
+          setWalletReceiverEmail={setWalletReceiverEmail}
+          paymentDetailLabel={paymentDetailLabel}
+          paymentDetailPlaceholder={paymentDetailPlaceholder}
+          handleFinalOrder={handleFinalOrder}
+        />
+      )}
 
-      <EventModal
-        selectedEvent={selectedEvent}
-        eventRegisterLoading={eventRegisterLoading}
-        eventRegisterSuccess={eventRegisterSuccess}
-        eventParticipants={eventParticipants}
-        eventForm={eventForm}
-        setEventForm={setEventForm}
-        handleCloseEvent={handleCloseEvent}
-        handleRegisterEvent={handleRegisterEvent}
-      />
+      {selectedEvent && (
+        <EventModal
+          selectedEvent={selectedEvent}
+          eventRegisterLoading={eventRegisterLoading}
+          eventRegisterSuccess={eventRegisterSuccess}
+          eventParticipants={eventParticipants}
+          eventForm={eventForm}
+          setEventForm={setEventForm}
+          handleCloseEvent={handleCloseEvent}
+          handleRegisterEvent={handleRegisterEvent}
+        />
+      )}
 
       <Footer />
     </div>

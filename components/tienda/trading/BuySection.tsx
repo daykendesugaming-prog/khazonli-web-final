@@ -30,10 +30,7 @@ export default function BuySection({ stocks, dolarRate, user, profile }: Props) 
 
   return (
     <div className="animate-fade-in">
-      <p className="text-gray-400 text-center mb-10 text-sm md:text-base italic">
-        {t('subtitle_buy')}
-      </p>
-
+      
       <div className="grid gap-6 md:grid-cols-3">
         {stocks.length === 0 ? (
           <div className="col-span-full text-center py-20 border border-dashed border-gray-800 rounded-3xl bg-[#121826]/30">

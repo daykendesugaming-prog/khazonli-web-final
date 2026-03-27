@@ -99,9 +99,7 @@ export default function ExchangeSection({ routes, user, profile }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto py-4 animate-fade-in">
-      <p className="text-gray-400 text-center mb-10 text-sm md:text-base">
-        {t('subtitle_swap')}
-      </p>
+      
 
       {routes.length === 0 ? (
         <div className="text-center py-12 text-gray-500 font-bold uppercase tracking-widest border border-gray-800 rounded-2xl bg-[#121826]/50">

@@ -1,11 +1,16 @@
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation'; // Usamos tu navegación inteligente
+import { Link } from '@/i18n/navigation';
 
 export default function SplashGateway() {
   const t = useTranslations('Gateway');
 
   return (
-    <div className="relative w-full h-screen flex flex-col md:flex-row overflow-hidden bg-[#0B0F19] pt-16">
+    /* 
+       Explicación técnica: 
+       mt-[-96px] anula el espacio superior del layout para que las 
+       imágenes de fondo queden pegadas al borde de arriba.
+    */
+    <div className="relative w-full h-screen flex flex-col md:flex-row overflow-hidden bg-[#0B0F19] mt-[-96px]">
       
       {/* LADO IZQUIERDO: GAMER HUB */}
       <Link 
@@ -23,9 +28,7 @@ export default function SplashGateway() {
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-[#00A8FF] tracking-tighter mb-4 drop-shadow-[0_0_15px_rgba(0,168,255,0.4)]">
             {t('gamer_title')}
           </h2>
-          <p className="text-gray-300 font-medium tracking-wide max-w-sm mx-auto">
-            {t('gamer_desc')}
-          </p>
+          <p className="text-gray-300 font-medium tracking-wide max-w-sm mx-auto">{t('gamer_desc')}</p>
           <div className="mt-8 inline-block px-7 py-2.5 border border-[#00A8FF]/50 text-[#00A8FF] rounded-full group-hover:bg-[#00A8FF] group-hover:text-[#0B0F19] group-hover:shadow-[0_0_30px_rgba(0,168,255,0.6)] font-bold transition-all">
             {t('gamer_btn')}
           </div>
@@ -48,14 +51,13 @@ export default function SplashGateway() {
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-4">
             PRO <span className="text-[#FBB03B] drop-shadow-[0_0_15px_rgba(251,176,59,0.2)]">SERVICES</span>
           </h2>
-          <p className="text-gray-400 font-medium tracking-wide max-w-sm mx-auto">
-            {t('pro_desc')}
-          </p>
+          <p className="text-gray-400 font-medium tracking-wide max-w-sm mx-auto">{t('pro_desc')}</p>
           <div className="mt-8 inline-block px-7 py-2.5 border border-gray-700 text-gray-300 rounded-full group-hover:border-[#FBB03B] group-hover:text-[#FBB03B] transition-all font-bold">
             {t('pro_btn')}
           </div>
         </div>
       </Link>
+
     </div>
   );
 }
