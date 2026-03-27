@@ -66,9 +66,9 @@ export default function ProductModal({
       
       {/* 📱 CORRECCIÓN DE ANCHO: max-w-full md:max-w-md para que no empuje las paredes del navegador */}
       <div className="bg-[#121826] border-t border-x md:border border-gray-800 rounded-t-[30px] md:rounded-[40px] w-full max-w-full md:max-w-md relative overflow-hidden shadow-2xl max-h-[92vh] flex flex-col mx-0">
-      {/* Cabecera con Icono: h-28 en móvil para ahorrar espacio vertical */}
-        <div className="h-28 md:h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800/50">
-          <div className="bg-[#121826] p-3 md:p-6 rounded-3xl border border-gray-800 shadow-2xl scale-75 md:scale-100 transition-transform">
+      {/* Cabecera con Icono: FIX h-16 en móvil para salvar la vista horizontal (Landscape) */}
+        <div className="h-16 md:h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800">
+          <div className="bg-[#121826] p-3 md:p-6 rounded-3xl border border-gray-800 shadow-2xl scale-50 md:scale-100 transition-transform">
             {renderIcon(selectedProduct.icon, true)}
           </div>
           <button
@@ -79,8 +79,9 @@ export default function ProductModal({
           </button>
         </div>
 
-        {/* Área de contenido con scroll interno habilitado (flex-1 y overflow-y-auto) */}
-        <div className="p-5 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar w-full overflow-x-hidden">
+        {/* Contenido interno con scroll */}
+      {/* FIX: p-4 en móvil (antes p-8) para no asfixiar el contenido interno y centrar bien */}
+      <div className="p-4 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar">
           
           {/* Título con break-words para evitar que nombres largos ensanchen el modal */}
           <h3 className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter mb-6 break-words px-2">
