@@ -70,22 +70,20 @@ export default function ProductModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-4 animate-fade-in">
-      <div className="bg-[#121826] border border-gray-800 rounded-[40px] w-full max-w-lg relative overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
-        
+      <div className="bg-[#121826] border border-gray-800 rounded-t-[32px] md:rounded-[40px] w-full max-w-lg relative overflow-hidden shadow-2xl max-h-[95vh] flex flex-col">
+
         {/* Cabecera con Icono */}
-        <div className="h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800/50">
-          <div className="bg-[#121826] p-6 rounded-3xl border border-gray-800 shadow-2xl">
+        <div className="h-32 md:h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800/50">
+          <div className="bg-[#121826] p-4 md:p-6 rounded-3xl border border-gray-800 shadow-2xl scale-90 md:scale-100">
             {renderIcon(selectedProduct.icon, true)}
           </div>
+          <button
+            onClick={resetModals}
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-red-500 z-20 transition-colors"
+          >
+            ✕
+          </button>
         </div>
-
-        {/* Botón Cerrar */}
-        <button
-          onClick={resetModals}
-          className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-red-500 transition-colors z-10"
-        >
-          ✕
-        </button>
 
         <div className="p-8 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar">
           <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">
@@ -268,11 +266,10 @@ export default function ProductModal({
                       setIsCopied(true);
                       setTimeout(() => setIsCopied(false), 2500);
                     }}
-                    className={`w-full py-3 mb-6 font-black uppercase text-xs rounded-xl transition-all shadow-lg ${
-                      isCopied
+                    className={`w-full py-3 mb-6 font-black uppercase text-xs rounded-xl transition-all shadow-lg ${isCopied
                         ? 'bg-green-500 text-black shadow-green-500/20'
                         : 'bg-gray-800 text-white hover:bg-gray-700'
-                    }`}
+                      }`}
                   >
                     {isCopied ? t('copied') : t('copy_data')}
                   </button>
@@ -326,7 +323,7 @@ export default function ProductModal({
                     </p>
                     <p className="text-2xl font-black text-white">
                       {isBsPayment(selectedPayment.name)
-                        ? `${(selectedVariant.is_wallet ? selectedVariant.calculated_bs : selectedVariant.price_usd * rates.buy).toFixed(2)} Bs`
+                        ? `≈ ${(selectedVariant.is_wallet ? selectedVariant.calculated_bs : selectedVariant.price_usd * rates.sell).toFixed(2)} Bs.`
                         : `${selectedVariant.price_text} ${isZinliPayment(selectedPayment.name) ? 'USD' : 'USDT'}`}
                     </p>
                   </div>

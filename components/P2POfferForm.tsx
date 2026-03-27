@@ -1,8 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { useTranslations } from 'next-intl';
+import { supabase } from '@/lib/supabase';
 
 export default function P2POfferForm() {
+  const t = useTranslations('TradingBoard');
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dbServers, setDbServers] = useState<string[]>([]);
@@ -10,6 +12,7 @@ export default function P2POfferForm() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
 
+  // Mantenemos los strings originales para no romper la lógica de .includes() en la base de datos
   const [action, setAction] = useState('Quiero Vender mis MK');
   const [server, setServer] = useState('');
   const [customServer, setCustomServer] = useState('');
@@ -59,7 +62,7 @@ export default function P2POfferForm() {
     const finalServer = server === 'Otro' ? customServer.trim() : server;
 
     if (!amount || !price || !contact.trim() || !finalServer.trim()) {
-      alert('⚠️ Por favor completa todos los campos para enviar tu oferta.');
+      alert(t('p2p_alert_fill'));
       return;
     }
 
@@ -98,7 +101,8 @@ export default function P2POfferForm() {
       console.warn('Error de conexión BD P2P:', e);
     }
 
-    const message = `¡Hola Khazonli! 👋\n\nTengo una *OFERTA P2P*.\n\n🆔 *TICKET:* ${orderId}\n🎯 *ACCIÓN:* ${action}\n🌍 *SERVER:* ${finalServer}\n💰 *CANTIDAD:* ${amount} MK\n💵 *MI PRECIO:* $${price} USD/MK\n🤝 *TOTAL PROPUESTO:* $${totalPropuesto} USD\n📞 *CONTACTO:* ${contact.trim()}\n\n¿Hacemos trato?`;
+    // Mensaje de WhatsApp estructurado como tu original
+    const message = `${t('p2p_wa_header')}\n\n🆔 *TICKET:* ${orderId}\n🎯 *${t('p2p_label_action').toUpperCase()}:* ${action}\n🌍 *SERVER:* ${finalServer}\n💰 *${t('label_stock').toUpperCase()}:* ${amount} MK\n💵 *${t('p2p_label_price').split(' ')[1].toUpperCase()}:* $${price} USD/MK\n🤝 *${t('p2p_submit_btn').split(' ')[0].toUpperCase()}:* $${totalPropuesto} USD\n📞 *${t('p2p_label_contact').split(' ')[1].toUpperCase()}:* ${contact.trim()}\n\n${t('p2p_wa_deal')}`;
 
     window.open(`https://wa.me/584124989220?text=${encodeURIComponent(message)}`, '_blank');
 
@@ -122,7 +126,7 @@ export default function P2POfferForm() {
         onClick={() => setIsOpen(true)}
         className="w-full mt-6 py-4 border border-dashed border-[#00A8FF]/50 bg-[#00A8FF]/5 text-[#00A8FF] font-bold rounded-xl hover:bg-[#00A8FF]/10 transition-all flex items-center justify-center gap-2"
       >
-        <span>⚡</span> ¿Tienes un lote grande? Proponer Precio Personalizado
+        <span>⚡</span> {t('p2p_cta_btn')}
       </button>
     );
   }
@@ -131,37 +135,37 @@ export default function P2POfferForm() {
     <div className="w-full mt-6 p-6 bg-[#0B0F19] border border-gray-800 rounded-xl relative animate-fade-in shadow-2xl">
       <button
         onClick={() => setIsOpen(false)}
-        className="absolute top-4 right-4 text-gray-500 hover:text-white"
+        className="absolute top-4 right-4 text-gray-500 hover:text-white p-2"
       >
         ✕
       </button>
 
       <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tight">
-        Lanza tu Oferta
+        {t('p2p_form_title')}
       </h3>
       <p className="text-xs text-gray-400 mb-6">
-        Si la oferta es buena, Khaz te contactará en menos de 24h.
+        {t('p2p_form_subtitle')}
       </p>
 
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">
-              Acción
+              {t('p2p_label_action')}
             </label>
             <select
               value={action}
               onChange={(e) => setAction(e.target.value)}
               className="w-full bg-[#121826] border border-gray-700 rounded-lg p-2.5 text-white text-sm focus:border-[#00A8FF] outline-none"
             >
-              <option>Quiero Vender mis MK</option>
-              <option>Quiero Comprar MK</option>
+              <option value="Quiero Vender mis MK">{t('p2p_opt_sell')}</option>
+              <option value="Quiero Comprar MK">{t('p2p_opt_buy')}</option>
             </select>
           </div>
 
           <div>
             <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">
-              Servidor
+              {t('p2p_label_server')}
             </label>
             <select
               value={server}
@@ -173,7 +177,7 @@ export default function P2POfferForm() {
                   {s}
                 </option>
               ))}
-              <option value="Otro">Otro (Escribir)</option>
+              <option value="Otro">{t('p2p_opt_other')}</option>
             </select>
           </div>
         </div>
@@ -181,7 +185,7 @@ export default function P2POfferForm() {
         {server === 'Otro' && (
           <div className="animate-fade-in">
             <label className="block text-[10px] font-bold text-[#00A8FF] uppercase mb-1">
-              Nombre del Servidor
+              {t('p2p_label_custom_server')}
             </label>
             <input
               type="text"
@@ -196,7 +200,7 @@ export default function P2POfferForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">
-              Cantidad (MK)
+              {t('p2p_label_amount')}
             </label>
             <input
               type="number"
@@ -209,7 +213,7 @@ export default function P2POfferForm() {
 
           <div>
             <label className="block text-[10px] font-bold text-[#FBB03B] uppercase mb-1">
-              Tu Precio (USD/MK)
+              {t('p2p_label_price')}
             </label>
             <input
               type="number"
@@ -224,7 +228,7 @@ export default function P2POfferForm() {
 
         <div>
           <label className="block text-[10px] font-bold text-[#00A8FF] uppercase mb-1">
-            Tu WhatsApp / Discord *
+            {t('p2p_label_contact')}
           </label>
           <input
             type="text"
@@ -241,7 +245,7 @@ export default function P2POfferForm() {
           disabled={isSubmitting || !amount || !price || !contact || (server === 'Otro' && !customServer)}
           className="w-full py-3 bg-gradient-to-r from-[#00A8FF] to-cyan-400 text-[#0B0F19] font-black uppercase tracking-wider rounded-lg shadow-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all mt-2"
         >
-          {isSubmitting ? 'Procesando...' : 'Enviar Oferta al Sistema'}
+          {isSubmitting ? t('process') : t('p2p_submit_btn')}
         </button>
       </div>
     </div>

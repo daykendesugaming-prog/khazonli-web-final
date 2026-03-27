@@ -193,6 +193,22 @@
     "label_stock": "Stock :",
     "placeholder_pj": "Nom de votre Personnage",
     "placeholder_amount": "Quantité (MK)",
-    "placeholder_phone": "Ex: +58 412 1234567"
+    "placeholder_phone": "Ex: +58 412 1234567",
+    "p2p_cta_btn": "Vous avez un gros lot ? Proposer un Prix Personnalisé",
+"p2p_form_title": "Lancez votre Offre",
+"p2p_form_subtitle": "Si l'offre est intéressante, Khaz vous contactera en moins de 24h.",
+"p2p_label_action": "Action",
+"p2p_opt_sell": "Je veux Vendre mes Kamas",
+"p2p_opt_buy": "Je veux Acheter des Kamas",
+"p2p_label_server": "Serveur",
+"p2p_opt_other": "Autre (Préciser)",
+"p2p_label_custom_server": "Nom du Serveur",
+"p2p_label_amount": "Quantité (MK)",
+"p2p_label_price": "Votre Prix (EUR/MK)",
+"p2p_label_contact": "Votre WhatsApp / Discord *",
+"p2p_submit_btn": "Envoyer l'Offre au Système",
+"p2p_alert_fill": "⚠️ Veuillez remplir tous les champs pour envoyer votre offre.",
+"p2p_wa_header": "Bonjour Khazonli ! 👋\n\nJ'ai une *OFFRE P2P*.",
+"p2p_wa_deal": "On fait affaire ?"
   }
 }
