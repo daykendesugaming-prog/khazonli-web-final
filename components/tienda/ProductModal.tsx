@@ -69,8 +69,8 @@ export default function ProductModal({
   const displayProductName = selectedProduct[`name_${locale}`] || selectedProduct.name;
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-end md:items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-0 md:p-4 animate-fade-in">
-      <div className="bg-[#121826] border-t border-x md:border border-gray-800 rounded-t-[30px] md:rounded-[40px] w-full max-w-full md:max-w-lg relative overflow-hidden shadow-2xl max-h-[92vh] flex flex-col">
+    <div className="fixed inset-0 z-[150] flex items-end md:items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-0 md:p-4 animate-fade-in overflow-x-hidden">
+      <div className="bg-[#121826] border-t border-x md:border border-gray-800 rounded-t-[30px] md:rounded-[40px] w-full max-w-full md:max-w-md relative overflow-hidden shadow-2xl max-h-[92vh] flex flex-col mx-0">
 
         {/* Cabecera con Icono */}
         <div className="h-28 md:h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800/50">
@@ -86,7 +86,7 @@ export default function ProductModal({
         </div>
 
         <div className="p-6 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar w-full">
-          <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">
+          <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4 break-words px-4">
             {displayProductName}
           </h3>
 
@@ -98,7 +98,7 @@ export default function ProductModal({
                   {t('calculator_title')}
                 </p>
 
-                <div className="bg-[#121826] border border-gray-800 rounded-2xl p-4 flex items-center gap-4 focus-within:border-[#00A8FF]/50 transition-colors">
+                <div className="bg-[#121826] border border-gray-800 rounded-2xl p-3 flex items-center gap-3 focus-within:border-[#00A8FF]/50 transition-colors">
                   <span className="text-3xl font-black text-gray-500 pl-2">$</span>
                   <input
                     type="number"
