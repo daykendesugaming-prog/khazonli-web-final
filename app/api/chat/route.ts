@@ -8,28 +8,51 @@ export async function POST(req: Request) {
     const { messages, locale } = await req.json();
     const lastMessage = messages[messages.length - 1].content;
 
-    // 🟢 ENDPOINT Y MODELO ACTUALIZADOS PARA VERCEL
+    // 🟢 CAMBIO CRÍTICO: Usamos 'v1' (Estable) y el modelo exacto
     const MODEL = "gemini-1.5-flash"; 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`;
+    const API_URL = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${apiKey}`;
 
     const response = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: `Eres Khaz AI, asistente gamer de Khazonli.es. Idioma: ${locale}. Responde breve y profesional. Mensaje: ${lastMessage}` }] }]
+        contents: [
+          {
+            role: "user", // Especificamos el rol para evitar errores de validación
+            parts: [{ 
+              text: `System Instruction: Eres Khaz AI, asistente gamer de Khazonli.es. Idioma: ${locale}. Responde breve y profesional. \n\n User Message: ${lastMessage}` 
+            }]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 400,
+        }
       })
     });
 
     const data = await response.json();
 
+    // Si Google responde con error (ej. por la región o la llave)
     if (data.error) {
-      return NextResponse.json({ role: "assistant", content: `⚠️ Google dice: ${data.error.message}` });
+      console.error("Google API Error:", data.error);
+      return NextResponse.json({ 
+        role: "assistant", 
+        content: `⚠️ Error de Google: ${data.error.message}` 
+      });
     }
 
-    const botText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No hay respuesta de la IA.";
+    // Extraer la respuesta de forma segura
+    const botText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!botText) {
+      return NextResponse.json({ role: "assistant", content: "IA conectada, pero no generó texto. Intenta de nuevo." });
+    }
+
     return NextResponse.json({ role: "assistant", content: botText });
 
   } catch (error: any) {
+    console.error("ERROR CRÍTICO:", error);
     return NextResponse.json({ role: "assistant", content: "❌ Error de conexión: " + error.message });
   }
 }
