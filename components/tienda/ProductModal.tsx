@@ -32,30 +32,15 @@ type Props = {
 };
 
 export default function ProductModal({
-  selectedProduct,
-  selectedVariant,
-  setSelectedVariant,
-  step,
-  setStep,
-  selectedPayment,
-  setSelectedPayment,
-  payments,
-  userProfile,
-  isWalletProduct,
-  walletAmount,
-  setWalletAmount,
-  rates,
-  resetModals,
-  isCopied,
-  setIsCopied,
-  paymentDetails,
-  setPaymentDetails,
-  customerPhone,
-  setCustomerPhone,
-  walletReceiverEmail,
-  setWalletReceiverEmail,
-  paymentDetailLabel,
-  paymentDetailPlaceholder,
+  selectedProduct, selectedVariant, setSelectedVariant,
+  step, setStep, selectedPayment, setSelectedPayment,
+  payments, userProfile, isWalletProduct,
+  walletAmount, setWalletAmount, rates,
+  resetModals, isCopied, setIsCopied,
+  paymentDetails, setPaymentDetails,
+  customerPhone, setCustomerPhone,
+  walletReceiverEmail, setWalletReceiverEmail,
+  paymentDetailLabel, paymentDetailPlaceholder,
   handleFinalOrder,
 }: Props) {
   const t = useTranslations('Modals');
@@ -65,14 +50,19 @@ export default function ProductModal({
 
   if (!selectedProduct) return null;
 
-  // Nombre dinámico desde DB si existe traducción
   const displayProductName = selectedProduct[`name_${locale}`] || selectedProduct.name;
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-4 animate-fade-in">
-      <div className="bg-[#121826] border border-gray-800 rounded-t-[32px] md:rounded-[40px] w-full max-w-lg relative overflow-hidden shadow-2xl max-h-[95vh] flex flex-col">
+  const formatBs = (val: number) =>
+    val.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        {/* Cabecera con Icono */}
+  return (
+    /* 🟢 MEJORA 1: items-end para móvil (Bottom Sheet) y md:items-center para PC */
+    <div className="fixed inset-0 z-[110] flex items-end md:items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-0 md:p-4 animate-fade-in">
+      
+      {/* 🟢 MEJORA 2: rounded-t para móvil y max-h-[95vh] para que no se salga nunca */}
+      <div className="bg-[#121826] border border-gray-800 rounded-t-[32px] md:rounded-[40px] w-full max-w-lg relative overflow-hidden shadow-2xl max-h-[95vh] flex flex-col">
+        
+        {/* Cabecera: Más pequeña en móvil (h-32) para dar aire */}
         <div className="h-32 md:h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800/50">
           <div className="bg-[#121826] p-4 md:p-6 rounded-3xl border border-gray-800 shadow-2xl scale-90 md:scale-100">
             {renderIcon(selectedProduct.icon, true)}
@@ -85,15 +75,15 @@ export default function ProductModal({
           </button>
         </div>
 
-        <div className="p-8 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar">
-          <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">
+        {/* 🟢 MEJORA 3: flex-1 y overflow-y-auto para permitir scroll con el dedo */}
+        <div className="p-6 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar">
+          <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-6">
             {displayProductName}
           </h3>
 
           {step === 1 ? (
             selectedProduct.category === 'wallets' ? (
-              /* CALCULADORA DE RECARGA */
-              <div className="bg-[#0B0F19] border border-gray-800 p-6 md:p-8 rounded-3xl space-y-6 text-left animate-fade-in shadow-inner">
+              <div className="bg-[#0B0F19] border border-gray-800 p-5 md:p-8 rounded-3xl space-y-6 text-left animate-fade-in shadow-inner">
                 <p className="text-[#00A8FF] text-xs font-black uppercase tracking-widest text-center">
                   {t('calculator_title')}
                 </p>
@@ -134,7 +124,7 @@ export default function ProductModal({
                       <div className="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase px-3">
                         <span>{t('total_bs')}:</span>
                         <span className="text-gray-300">
-                          {totalBs.toFixed(2)} Bs
+                          {formatBs(totalBs)} Bs.
                         </span>
                       </div>
 
@@ -161,7 +151,6 @@ export default function ProductModal({
                 })()}
               </div>
             ) : (
-              /* LISTA DE VARIANTES/PLANES */
               <div className="space-y-3">
                 {selectedProduct.product_variants?.length > 0 ? (
                   selectedProduct.product_variants.map((v: any) => (
@@ -171,7 +160,7 @@ export default function ProductModal({
                         setSelectedVariant(v);
                         setStep(2);
                       }}
-                      className="w-full bg-[#0B0F19] border border-gray-800 p-5 rounded-2xl flex justify-between items-center group hover:border-[#00A8FF]/50 transition-all hover:bg-white/5"
+                      className="w-full bg-[#0B0F19] border border-gray-800 p-4 md:p-5 rounded-2xl flex justify-between items-center group hover:border-[#00A8FF]/50 transition-all hover:bg-white/5"
                     >
                       <div className="text-left">
                         <p className="text-sm font-black text-white">
@@ -180,82 +169,65 @@ export default function ProductModal({
                       </div>
                       <div className="text-right">
                         <p className="text-xl font-black text-[#FBB03B]">
-                          {v.price_text}{' '}
-                          <span className="text-sm text-[#FBB03B]/70">USDT</span>
+                          ${v.price_text}
                         </p>
-                        <p className="text-[10px] text-gray-500 font-bold tracking-wider">
-                          ≈ {(v.price_usd * rates.buy).toFixed(2)} Bs
+                        <p className="text-[9px] text-gray-500 font-bold uppercase">
+                          ≈ {formatBs(v.price_usd * rates.sell)} Bs.
                         </p>
                       </div>
                     </button>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-sm font-bold uppercase tracking-widest py-8">
+                  <p className="text-gray-500 text-sm font-bold uppercase py-8">
                     {tCommon('loading')}
                   </p>
                 )}
               </div>
             )
           ) : (
-            /* PASO 2: MÉTODOS DE PAGO */
             <div className="animate-fade-in space-y-4">
               {!selectedPayment ? (
                 <>
-                  <p className="text-green-400 font-bold uppercase text-xs tracking-widest italic mb-4">
+                  <p className="text-green-400 font-bold uppercase text-[10px] tracking-widest italic mb-4">
                     {t('how_to_pay')}
                   </p>
 
                   <div className="grid grid-cols-1 gap-3">
-                    {payments.length > 0 ? (
-                      payments.map((p: any) => (
-                        <button
-                          key={p.id}
-                          onClick={() => {
-                            setSelectedPayment(p);
-                            if (userProfile) {
-                              if (userProfile.whatsapp) setCustomerPhone(userProfile.whatsapp);
-                              if (isWalletProduct && isZinliPayment(p.name) && userProfile.zinli_email) {
-                                setWalletReceiverEmail(userProfile.zinli_email);
-                              }
+                    {payments.map((p: any) => (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setSelectedPayment(p);
+                          if (userProfile) {
+                            if (userProfile.whatsapp) setCustomerPhone(userProfile.whatsapp);
+                            if (isWalletProduct && isZinliPayment(p.name) && userProfile.zinli_email) {
+                              setWalletReceiverEmail(userProfile.zinli_email);
                             }
-                          }}
-                          className="bg-[#0B0F19] border border-gray-800 p-5 md:p-6 rounded-2xl flex justify-between items-center hover:border-green-400 hover:bg-green-400/5 transition-all group shadow-lg"
-                        >
-                          <div className="text-left">
-                            <span className="text-white text-sm md:text-base font-black uppercase block mb-1">
-                              {p.name}
-                            </span>
-                            <span className="text-[10px] text-gray-500 block truncate max-w-[200px]">
-                              {p.details}
-                            </span>
-                          </div>
-                          <span className="text-[10px] text-green-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold uppercase tracking-widest ml-4 shrink-0">
-                            {t('select_method')} →
-                          </span>
-                        </button>
-                      ))
-                    ) : (
-                      <p className="text-gray-500 text-sm">{tCommon('loading')}</p>
-                    )}
+                          }
+                        }}
+                        className="bg-[#0B0F19] border border-gray-800 p-4 rounded-2xl flex flex-col text-left hover:border-green-400 transition-all"
+                      >
+                        <span className="text-white text-sm font-black uppercase">{p.name}</span>
+                        <span className="text-[10px] text-gray-500 truncate max-w-xs">{p.details}</span>
+                      </button>
+                    ))}
                   </div>
 
                   <button
                     onClick={() => setStep(1)}
-                    className="mt-6 text-[10px] md:text-xs text-gray-500 hover:text-white uppercase font-bold tracking-widest transition-colors"
+                    className="mt-6 text-[10px] text-gray-500 hover:text-white uppercase font-bold tracking-widest transition-colors"
                   >
                     ← {tCommon('back')}
                   </button>
                 </>
               ) : (
-                /* DETALLE DEL PAGO SELECCIONADO */
-                <div className="bg-[#0B0F19] border border-gray-800 rounded-3xl p-6 text-left relative overflow-hidden animate-fade-in">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
-                  <h4 className="text-green-400 font-black uppercase text-sm mb-2">
+                <div className="bg-[#0B0F19] border border-green-500/30 p-5 md:p-6 rounded-3xl text-left relative overflow-hidden animate-fade-in">
+                  <h4 className="text-green-400 font-black uppercase text-sm mb-3">
                     {selectedPayment.name}
                   </h4>
 
                   <div className="bg-[#121826] p-4 rounded-xl border border-gray-800 mb-4">
-                    <p className="text-gray-300 text-sm whitespace-pre-line font-mono">
+                    <p className="text-white text-[11px] font-mono leading-relaxed whitespace-pre-line">
                       {selectedPayment.details}
                     </p>
                   </div>
@@ -264,80 +236,72 @@ export default function ProductModal({
                     onClick={() => {
                       navigator.clipboard.writeText(selectedPayment.details);
                       setIsCopied(true);
-                      setTimeout(() => setIsCopied(false), 2500);
+                      setTimeout(() => setIsCopied(false), 2000);
                     }}
-                    className={`w-full py-3 mb-6 font-black uppercase text-xs rounded-xl transition-all shadow-lg ${isCopied
-                        ? 'bg-green-500 text-black shadow-green-500/20'
-                        : 'bg-gray-800 text-white hover:bg-gray-700'
+                    className={`w-full py-3 mb-6 font-black uppercase text-[10px] rounded-xl transition-all shadow-lg ${isCopied
+                        ? 'bg-green-500 text-black'
+                        : 'bg-gray-800 text-white'
                       }`}
                   >
                     {isCopied ? t('copied') : t('copy_data')}
                   </button>
 
-                  <div className="space-y-4 mb-6 p-4 bg-[#121826] border border-gray-800 rounded-xl">
+                  <div className="space-y-4 mb-6">
                     <div>
-                      <label className="text-[10px] uppercase font-black text-gray-500 mb-2 block">
-                        {t('whatsapp_required')}
-                      </label>
+                      <label className="text-[10px] uppercase font-black text-gray-500 mb-1 block ml-1">{t('whatsapp_required')}</label>
                       <input
                         type="tel"
                         placeholder="Ej: +58 412 1234567"
                         value={customerPhone}
                         onChange={(e) => setCustomerPhone(e.target.value)}
-                        className="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-white text-sm outline-none focus:border-[#25D366] transition-colors"
+                        className="w-full bg-[#121826] border border-gray-800 rounded-xl p-3 text-white text-sm outline-none focus:border-green-500/50"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] uppercase font-black text-gray-500 mb-2 block">
-                        {paymentDetailLabel()}
-                      </label>
+                      <label className="text-[10px] uppercase font-black text-gray-500 mb-1 block ml-1">{paymentDetailLabel()}</label>
                       <input
                         type="text"
                         placeholder={paymentDetailPlaceholder()}
                         value={paymentDetails}
                         onChange={(e) => setPaymentDetails(e.target.value)}
-                        className="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-white text-sm outline-none focus:border-[#25D366] transition-colors"
+                        className="w-full bg-[#121826] border border-gray-800 rounded-xl p-3 text-white text-sm outline-none focus:border-green-500/50"
                       />
                     </div>
 
                     {isWalletProduct && selectedPayment && isZinliPayment(selectedPayment.name) && (
-                      <div>
-                        <label className="text-[10px] uppercase font-black text-gray-500 mb-2 block">
-                          {tTienda('email_label')} Zinli <span className="text-red-500">*</span>
-                        </label>
+                      <div className="animate-fade-in">
+                        <label className="text-[10px] uppercase font-black text-green-400 mb-1 block ml-1">{tTienda('email_label')} Zinli/Wally *</label>
                         <input
                           type="email"
-                          placeholder="Ej: tu-correo@zinli.com"
+                          placeholder="tu-correo@ejemplo.com"
                           value={walletReceiverEmail}
                           onChange={(e) => setWalletReceiverEmail(e.target.value)}
-                          className="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-white text-sm outline-none focus:border-[#25D366] transition-colors"
+                          className="w-full bg-[#121826] border border-green-500/30 rounded-xl p-3 text-white text-sm outline-none"
                         />
                       </div>
                     )}
                   </div>
 
-                  <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl mb-6">
-                    <p className="text-[10px] uppercase font-black text-gray-500 mb-1">
-                      Monto a transferir:
-                    </p>
+                  <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl mb-6 text-center">
+                    <p className="text-[10px] uppercase font-black text-gray-500 mb-1">Monto a transferir:</p>
                     <p className="text-2xl font-black text-white">
                       {isBsPayment(selectedPayment.name)
-                        ? `≈ ${(selectedVariant.is_wallet ? selectedVariant.calculated_bs : selectedVariant.price_usd * rates.sell).toFixed(2)} Bs.`
+                        ? `≈ ${formatBs(selectedVariant.is_wallet ? selectedVariant.calculated_bs : selectedVariant.price_usd * rates.sell)} Bs.`
                         : `${selectedVariant.price_text} ${isZinliPayment(selectedPayment.name) ? 'USD' : 'USDT'}`}
                     </p>
                   </div>
 
                   <button
                     onClick={handleFinalOrder}
-                    className="w-full py-4 bg-[#25D366] text-black font-black uppercase text-sm rounded-xl hover:bg-[#20bd5a] transition-all shadow-lg shadow-[#25D366]/20 active:scale-95"
+                    className="w-full py-4 bg-[#25D366] text-[#0B0F19] font-black uppercase text-sm rounded-xl hover:bg-[#20bd5a] transition-all shadow-lg shadow-[#25D366]/20 active:scale-95"
                   >
                     {t('notify_payment')}
                   </button>
 
                   <button
                     onClick={() => setSelectedPayment(null)}
-                    className="w-full text-center mt-5 text-[10px] text-gray-500 hover:text-white uppercase font-bold tracking-widest transition-colors"
+                    className="w-full text-center mt-5 text-[10px] text-gray-600 font-bold uppercase tracking-widest hover:text-white transition-colors"
                   >
                     ← {t('change_method')}
                   </button>
