@@ -57,11 +57,12 @@ export default function ProductModal({
 
   return (
     /* 🟢 MEJORA 1: items-end para móvil (Bottom Sheet) y md:items-center para PC */
+    // REEMPLAZAR POR ESTO:
     <div className="fixed inset-0 z-[110] flex items-end md:items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-0 md:p-4 animate-fade-in">
-      
+
       {/* 🟢 MEJORA 2: rounded-t para móvil y max-h-[95vh] para que no se salga nunca */}
-      <div className="bg-[#121826] border border-gray-800 rounded-t-[32px] md:rounded-[40px] w-full max-w-lg relative overflow-hidden shadow-2xl max-h-[95vh] flex flex-col">
-        
+     <div className="bg-[#121826] border-x md:border border-gray-800 rounded-t-[32px] md:rounded-[40px] w-full max-w-full md:max-w-lg relative overflow-hidden shadow-2xl max-h-[92vh] flex flex-col mx-0">
+
         {/* Cabecera: Más pequeña en móvil (h-32) para dar aire */}
         <div className="h-32 md:h-40 shrink-0 bg-gradient-to-br from-[#0B0F19] to-gray-900 flex items-center justify-center relative border-b border-gray-800/50">
           <div className="bg-[#121826] p-4 md:p-6 rounded-3xl border border-gray-800 shadow-2xl scale-90 md:scale-100">
@@ -76,7 +77,7 @@ export default function ProductModal({
         </div>
 
         {/* 🟢 MEJORA 3: flex-1 y overflow-y-auto para permitir scroll con el dedo */}
-        <div className="p-6 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar">
+        <div className="p-5 md:p-10 text-center flex-1 overflow-y-auto custom-scrollbar w-full">
           <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-6">
             {displayProductName}
           </h3>
@@ -239,8 +240,8 @@ export default function ProductModal({
                       setTimeout(() => setIsCopied(false), 2000);
                     }}
                     className={`w-full py-3 mb-6 font-black uppercase text-[10px] rounded-xl transition-all shadow-lg ${isCopied
-                        ? 'bg-green-500 text-black'
-                        : 'bg-gray-800 text-white'
+                      ? 'bg-green-500 text-black'
+                      : 'bg-gray-800 text-white'
                       }`}
                   >
                     {isCopied ? t('copied') : t('copy_data')}
