@@ -1,0 +1,2610 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: app/**/*.tsx, proxy.ts, middleware.ts, next.config.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+app/[locale]/forgot-password/page.tsx
+app/[locale]/layout.tsx
+app/[locale]/legal/politicas/page.tsx
+app/[locale]/legal/soporte/page.tsx
+app/[locale]/legal/terminos/page.tsx
+app/[locale]/login/page.tsx
+app/[locale]/page.tsx
+app/[locale]/perfil/page.tsx
+app/[locale]/reset-password/page.tsx
+app/[locale]/servicios/page.tsx
+app/[locale]/tienda/page.tsx
+app/admin/layout.tsx
+app/admin/page.tsx
+app/admin/tickets/page.tsx
+app/layout.tsx
+next.config.ts
+proxy.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="app/[locale]/forgot-password/page.tsx">
+"use client";
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleResetRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const redirectTo =
+        typeof window !== 'undefined'
+          ? `${window.location.origin}/reset-password`
+          : undefined;
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      });
+
+      if (error) throw new Error(error.message);
+
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.message || 'No se pudo procesar la solicitud.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00A8FF]/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FBB03B]/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div className="bg-[#121826] border border-gray-800 p-8 md:p-10 rounded-[30px] w-full max-w-md shadow-2xl relative z-10 animate-fade-in">
+        <div className="text-center mb-8">
+          <Link href="/">
+            <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter hover:scale-105 transition-transform inline-block cursor-pointer mb-2">
+              KHAZONLI<span className="text-[#00A8FF]">.ES</span>
+            </h1>
+          </Link>
+          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+            Recuperación de acceso
+          </p>
+        </div>
+
+        {success ? (
+          <div className="text-center py-6 animate-fade-in">
+            <div className="w-20 h-20 bg-[#00A8FF]/10 border border-[#00A8FF]/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(0,168,255,0.2)]">
+              <span className="text-4xl">📩</span>
+            </div>
+            <h2 className="text-2xl font-black text-white uppercase tracking-widest mb-2">
+              Correo enviado
+            </h2>
+            <p className="text-[#00A8FF] font-bold text-sm mb-4">
+              Revisa tu bandeja de entrada
+            </p>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Si el correo existe en el sistema, recibirás un enlace para restablecer tu contraseña.
+            </p>
+
+            <Link
+              href="/login"
+              className="inline-block mt-8 px-6 py-3 bg-[#00A8FF] text-[#0B0F19] font-black uppercase text-xs tracking-widest rounded-xl hover:bg-blue-400 transition-all shadow-lg shadow-[#00A8FF]/20"
+            >
+              Volver al acceso
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6 rounded-2xl border border-[#00A8FF]/15 bg-[#0B0F19]/80 px-4 py-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[#00A8FF]">
+                Recupera tu cuenta
+              </p>
+              <p className="mt-2 text-[12px] leading-relaxed text-gray-400">
+                Introduce el correo de tu cuenta y te enviaremos un enlace para crear una nueva contraseña.
+              </p>
+            </div>
+
+            <form onSubmit={handleResetRequest} className="space-y-4">
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+                  placeholder="tu@correo.com"
+                  required
+                />
+              </div>
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mt-4">
+                  <p className="text-red-500 text-[10px] font-bold text-center uppercase tracking-wider">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-6 py-4 bg-[#00A8FF] text-[#0B0F19] font-black uppercase text-xs tracking-widest rounded-xl hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#00A8FF]/20"
+              >
+                {loading ? 'Enviando enlace...' : 'Enviar enlace de recuperación'}
+              </button>
+            </form>
+          </>
+        )}
+
+        <div className="mt-8 text-center border-t border-gray-800 pt-6">
+          <Link
+            href="/login"
+            className="text-gray-500 hover:text-white text-[10px] font-bold uppercase transition-colors tracking-widest"
+          >
+            ← Volver al login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/layout.tsx">
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { ReactNode } from 'react';
+import Navbar from '@/components/Navbar';
+
+export default async function LocaleLayout({
+  children,
+  params
+}: {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const locales = ['es', 'en', 'fr', 'pt-BR'];
+  if (!locales.includes(locale)) notFound();
+
+  const messages = await getMessages();
+
+  return (
+    <html lang={locale}>
+      <body className="bg-[#0B0F19] text-white antialiased">
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <Navbar /> 
+          <main className="pt-24">
+            {children}
+          </main>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
+}
+</file>
+
+<file path="app/[locale]/legal/politicas/page.tsx">
+import Link from 'next/link';
+
+export default function PoliticasPage() {
+  return (
+    <div className="min-h-screen bg-[#0B0F19] text-white p-8 md:p-24">
+      <div className="max-w-3xl mx-auto">
+        <Link href="/" className="text-purple-500 text-sm font-bold uppercase tracking-widest hover:underline mb-8 inline-block">
+          ← Volver al Inicio
+        </Link>
+        
+        <h1 className="text-4xl font-black mb-8 uppercase tracking-tighter">
+          Políticas de <span className="text-purple-500">Seguridad</span>
+        </h1>
+
+        <div className="space-y-8 text-gray-400 leading-relaxed text-sm">
+          <section>
+            <h2 className="text-white font-bold uppercase mb-3 tracking-widest text-xs">1. Protección de Datos</h2>
+            <p>En Khazonli utilizamos tecnología de cifrado y bases de datos seguras (Supabase) para garantizar que tu información personal nunca sea vulnerada.</p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold uppercase mb-3 tracking-widest text-xs">2. Privacidad de Contacto</h2>
+            <p>Tu número de WhatsApp y correo electrónico solo se utilizarán para gestionar tus pedidos. Khazonli no vende ni comparte bases de datos con terceros bajo ninguna circunstancia.</p>
+          </section>
+
+          <section className="bg-purple-500/5 p-6 rounded-2xl border border-purple-500/20">
+            <h2 className="text-purple-400 font-bold uppercase mb-3 tracking-widest text-xs">3. Transacciones Seguras</h2>
+            <p>Recomendamos a todos nuestros clientes realizar operaciones únicamente a través de nuestros canales oficiales. **Khazonli jamás te pedirá tus contraseñas de juego ni claves de acceso bancario.**</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/legal/soporte/page.tsx">
+import Link from 'next/link';
+
+export default function SoportePage() {
+  return (
+    <div className="min-h-screen bg-[#0B0F19] text-white p-8 md:p-24 flex flex-col items-center justify-center text-center">
+      <div className="max-w-2xl mx-auto">
+        <div className="w-20 h-20 bg-[#00A8FF]/10 rounded-full flex items-center justify-center mb-8 mx-auto border border-[#00A8FF]/20 shadow-[0_0_30px_rgba(0,168,255,0.1)]">
+          <span className="text-4xl">🎧</span>
+        </div>
+        
+        {/* 🟢 AQUÍ ESTABA EL ERROR: h1 cerrado correctamente */}
+        <h1 className="text-4xl font-black mb-4 uppercase tracking-tighter">
+          Centro de <span className="text-[#00A8FF]">Soporte</span>
+        </h1>
+        
+        <p className="text-gray-400 mb-12 leading-relaxed">
+          Nuestra Inteligencia Artificial de soporte está en mantenimiento. 
+          Mientras tanto, un agente humano de <span className="text-white font-bold">Khazonli</span> te atenderá de forma inmediata.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <div className="bg-[#121826] p-6 rounded-3xl border border-gray-800">
+            <h3 className="text-white font-bold uppercase text-xs mb-2 tracking-widest">Dudas con Pagos</h3>
+            <p className="text-gray-500 text-xs italic">Consultas sobre tasas o estados de transferencias.</p>
+          </div>
+          <div className="bg-[#121826] p-6 rounded-3xl border border-gray-800">
+            <h3 className="text-white font-bold uppercase text-xs mb-2 tracking-widest">Servicios Pro</h3>
+            <p className="text-gray-500 text-xs italic">Presupuestos para bots o desarrollo web.</p>
+          </div>
+        </div>
+
+        <a 
+          href="https://chat.whatsapp.com/HTTT0c4E0wn29Xlm8kDGjs" 
+          target="_blank" 
+          className="px-8 py-4 bg-[#25D366] text-black font-black rounded-2xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-3 mx-auto shadow-[0_0_30px_rgba(37,211,102,0.2)]"
+        >
+          <span className="text-xl">💬</span> CONTACTAR AHORA
+        </a>
+
+        <Link href="/" className="mt-12 block text-gray-500 text-xs font-bold uppercase tracking-[0.3em] hover:text-[#00A8FF] transition-all">
+          ← Volver a la Central
+        </Link>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/legal/terminos/page.tsx">
+import Link from 'next/link';
+
+export default function TerminosPage() {
+  return (
+    <div className="min-h-screen bg-[#0B0F19] text-white p-8 md:p-24">
+      <div className="max-w-3xl mx-auto">
+        <Link href="/" className="text-[#00A8FF] text-sm font-bold uppercase tracking-widest hover:underline mb-8 inline-block">
+          ← Volver al Inicio
+        </Link>
+        
+        <h1 className="text-4xl font-black mb-8 uppercase tracking-tighter">
+          Términos y <span className="text-[#00A8FF]">Condiciones</span>
+        </h1>
+
+        <div className="space-y-8 text-gray-400 leading-relaxed text-sm">
+          <section>
+            <h2 className="text-white font-bold uppercase mb-3 tracking-widest text-xs">1. Naturaleza del Servicio</h2>
+            <p>Khazonli.es opera como una plataforma de intermediación para la compra y venta de bienes virtuales, divisas digitales y servicios de suscripción. Al usar nuestro sitio, declaras ser mayor de edad o contar con supervisión legal.</p>
+          </section>
+
+          <section className="bg-[#121826] p-6 rounded-2xl border border-gray-800">
+            <h2 className="text-[#00A8FF] font-bold uppercase mb-3 tracking-widest text-xs">2. Irreversibilidad de Operaciones</h2>
+            <p className="text-gray-300 italic">"Debido a la naturaleza intangible de los productos (Kamas, Saldo, Pines), toda transacción confirmada por el cliente es definitiva."</p>
+            <p className="mt-2 text-xs">No se realizarán reembolsos una vez que Khazonli haya procesado el envío de los bienes o el pago móvil a la cuenta destino suministrada.</p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold uppercase mb-3 tracking-widest text-xs">3. Responsabilidad de Datos</h2>
+            <p>Es responsabilidad exclusiva del usuario suministrar correctamente los datos de Pago Móvil, correos electrónicos o nombres de servidores. Khazonli no se hace responsable por fondos enviados a destinos erróneos por fallas en la información provista por el cliente.</p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold uppercase mb-3 tracking-widest text-xs">4. Tiempos de Procesamiento</h2>
+            <p>Nos esforzamos por procesar cada orden en un máximo de 30 a 60 minutos. No obstante, este tiempo puede variar debido a fallas en servicios eléctricos, de internet o de plataformas bancarias externas.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/login/page.tsx">
+"use client";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { supabase } from '@/lib/supabase';
+
+export default function LoginPage() {
+  const router = useRouter();
+  const t = useTranslations('Auth');
+  
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+
+  const switchMode = (loginMode: boolean) => {
+    setIsLogin(loginMode);
+    setError(null);
+    setSuccess(false);
+  };
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (isLogin) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (signInError) {
+          throw new Error('Credenciales incorrectas. Verifica tu correo y contraseña.');
+        }
+
+        router.push('/perfil');
+      } else {
+        if (!fullName.trim() || !whatsapp.trim()) {
+          throw new Error('Por favor, completa tu Nombre y WhatsApp.');
+        }
+
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (signUpError) throw new Error(signUpError.message);
+
+        if (authData.user) {
+          const { error: profileError } = await supabase.from('user_profiles').insert([
+            {
+              id: authData.user.id,
+              full_name: fullName,
+              whatsapp: whatsapp,
+            },
+          ]);
+
+          if (profileError) {
+            console.warn('Aviso: Perfil creado con error en datos extra:', profileError.message);
+          }
+        }
+
+        setSuccess(true);
+
+        setTimeout(() => {
+          router.push('/perfil');
+        }, 2500);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Ocurrió un error inesperado.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* GLOWS DE FONDO - RECUPERADOS */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00A8FF]/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FBB03B]/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div className="bg-[#121826] border border-gray-800 p-8 md:p-10 rounded-[30px] w-full max-w-md shadow-2xl relative z-10 animate-fade-in">
+        <div className="text-center mb-8">
+          <Link href="/">
+            <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter hover:scale-105 transition-transform inline-block cursor-pointer mb-2">
+              KHAZONLI<span className="text-[#00A8FF]">.ES</span>
+            </h1>
+          </Link>
+          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+            {isLogin ? t('login_panel') : t('join_station')}
+          </p>
+        </div>
+
+        {success ? (
+          <div className="text-center py-8 animate-fade-in">
+            <div className="w-20 h-20 bg-[#00A8FF]/10 border border-[#00A8FF]/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(0,168,255,0.2)]">
+              <span className="text-4xl">🚀</span>
+            </div>
+            <h2 className="text-2xl font-black text-white uppercase tracking-widest mb-2">
+              {t('success_reg')}
+            </h2>
+            <p className="text-[#00A8FF] font-bold text-sm mb-6">{t('welcome')}</p>
+            <p className="text-gray-500 text-xs uppercase tracking-widest animate-pulse">
+              {t('opening_profile')}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="flex bg-[#0B0F19] rounded-xl p-1 mb-8 border border-gray-800">
+              <button
+                onClick={() => switchMode(true)}
+                className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${
+                  isLogin
+                    ? 'bg-[#00A8FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,168,255,0.4)]'
+                    : 'text-gray-500 hover:text-white'
+                }`}
+              >
+                {t('enter')}
+              </button>
+              <button
+                onClick={() => switchMode(false)}
+                className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${
+                  !isLogin
+                    ? 'bg-[#00A8FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,168,255,0.4)]'
+                    : 'text-gray-500 hover:text-white'
+                }`}
+              >
+                {t('register')}
+              </button>
+            </div>
+
+            <form onSubmit={handleAuth} className="space-y-4">
+              {!isLogin && (
+                <div className="space-y-4 animate-fade-in">
+                  <div>
+                    <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                      {t('name_placeholder')}
+                    </label>
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+                      placeholder="Ej: Yugo"
+                      required={!isLogin}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-black text-[#00A8FF] uppercase mb-2 ml-1">
+                      {t('whatsapp_label')}
+                    </label>
+                    <input
+                      type="tel"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      className="w-full bg-[#0B0F19] border border-[#00A8FF]/30 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF] transition-colors"
+                      placeholder="Ej: +58 412 1234567"
+                      required={!isLogin}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                  {t('email_label')}
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+                  placeholder="tu@correo.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                  {t('pass_label')}
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
+
+              {isLogin && (
+                <div className="flex justify-end -mt-1">
+                  <Link
+                    href="/forgot-password"
+                    className="text-[10px] font-black uppercase tracking-widest text-[#00A8FF] hover:text-white transition-colors"
+                  >
+                    {t('forgot_pass')}
+                  </Link>
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mt-4">
+                  <p className="text-red-500 text-[10px] font-bold text-center uppercase tracking-wider">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-6 py-4 bg-[#00A8FF] text-[#0B0F19] font-black uppercase text-xs tracking-widest rounded-xl hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#00A8FF]/20"
+              >
+                {loading ? t('process') : isLogin ? t('btn_access') : t('btn_create')}
+              </button>
+            </form>
+          </>
+        )}
+
+        <div className="mt-8 text-center border-t border-gray-800 pt-6">
+          <Link
+            href="/"
+            className="text-gray-500 hover:text-white text-[10px] font-bold uppercase transition-colors tracking-widest"
+          >
+            ← {t('back_login')}
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/page.tsx">
+import Link from 'next/link';
+
+export default function SplashGateway() {
+  return (
+    <div className="relative w-full h-screen flex flex-col md:flex-row overflow-hidden bg-khaz-dark pt-16">
+      
+      {/* LADO IZQUIERDO: GAMER HUB */}
+      <Link 
+        id="gamer-hub" // 🟢 Conexión para el Footer
+        href="/tienda" 
+        className="group relative w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-800/50 hover:bg-[#060A14] transition-all duration-700 overflow-hidden"
+      >
+        <div className="absolute inset-0 z-0 opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-1000">
+           <div className="w-full h-full bg-[url('/fondo-gamer.jpg')] bg-cover bg-center filter blur-[2px]"></div>
+           <div className="absolute inset-0 bg-gradient-to-br from-khaz-dark/80 to-khaz-blue/10"></div>
+        </div>
+        
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-khaz-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+        
+        <div className="text-center z-10 transform group-hover:scale-105 transition-transform duration-500 px-4">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-khaz-blue tracking-tighter mb-4 drop-shadow-[0_0_15px_rgba(0,168,255,0.4)]">
+            GAMER HUB
+          </h2>
+          <p className="text-gray-300 font-medium tracking-wide max-w-sm mx-auto">Economía MMO • Streaming • Torneos</p>
+          <div className="mt-8 inline-block px-7 py-2.5 border border-khaz-blue/50 text-khaz-blue rounded-full group-hover:bg-khaz-blue group-hover:text-khaz-dark group-hover:shadow-[0_0_30px_rgba(0,168,255,0.6)] font-bold transition-all">
+            Entrar a la Tienda
+          </div>
+        </div>
+      </Link>
+
+      {/* LADO DERECHO: PRO SERVICES */}
+      <Link 
+        id="pro-services" // 🟢 Conexión para el Footer
+        href="/servicios" // 🟢 Sincronizado con nuestra nueva página
+        className="group relative w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center hover:bg-black transition-all duration-700 overflow-hidden"
+      >
+        <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-1000">
+           <div className="w-full h-full bg-[url('/fondo-pro.jpg')] bg-cover bg-center filter blur-[2px]"></div>
+           <div className="absolute inset-0 bg-gradient-to-bl from-khaz-dark/90 to-khaz-gold/10"></div>
+        </div>
+
+        <div className="absolute inset-0 z-0 bg-gradient-to-bl from-khaz-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+        <div className="text-center z-10 transform group-hover:scale-105 transition-transform duration-500 px-4">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-4">
+            PRO <span className="text-khaz-gold drop-shadow-[0_0_15px_rgba(251,176,59,0.2)]">SERVICES</span>
+          </h2>
+          <p className="text-gray-400 font-medium tracking-wide max-w-sm mx-auto">Desarrollo Web • IA • Automatización</p>
+          <div className="mt-8 inline-block px-7 py-2.5 border border-gray-700 text-gray-300 rounded-full group-hover:border-khaz-gold group-hover:text-khaz-gold transition-all font-bold">
+            Ver Soluciones
+          </div>
+        </div>
+      </Link>
+
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/perfil/page.tsx">
+"use client";
+
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { supabase } from '@/lib/supabase';
+import NeonToast from '@/components/NeonToast';
+
+export default function PerfilCliente() {
+  const router = useRouter();
+  const t = useTranslations('Perfil');
+  const tCommon = useTranslations('common');
+  const tTienda = useTranslations('Tienda');
+  
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [orders, setOrders] = useState<any[]>([]);
+
+  const [pagoMovil, setPagoMovil] = useState('');
+  const [binanceEmail, setBinanceEmail] = useState('');
+  const [zinliEmail, setZinliEmail] = useState('');
+  const [toast, setToast] = useState({
+    open: false,
+    type: 'success' as 'success' | 'error' | 'info',
+    title: '',
+    message: '',
+  });
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    checkUser();
+
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
+
+  const showToast = (type: 'success' | 'error' | 'info', title: string, message: string) => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+
+    setToast({ open: true, type, title, message });
+
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast((prev) => ({ ...prev, open: false }));
+    }, 4200);
+  };
+
+  const checkUser = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      router.push('/login');
+      return;
+    }
+
+    const { data: profileData } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    if (profileData) {
+      setUserProfile({ ...profileData, email: session.user.email, id: session.user.id });
+      setPagoMovil(profileData.pago_movil || '');
+      setBinanceEmail(profileData.binance_email || '');
+      setZinliEmail(profileData.zinli_email || '');
+    }
+
+    const { data: ordersData, error: ordersError } = await supabase
+      .from('digital_orders')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false });
+
+    if (!ordersError && ordersData) {
+      setOrders(ordersData);
+    }
+
+    setLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
+
+  const handleSaveWallet = async () => {
+    if (!userProfile?.id) return;
+    setSaving(true);
+
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({
+          pago_movil: pagoMovil,
+          binance_email: binanceEmail,
+          zinli_email: zinliEmail,
+        })
+        .eq('id', userProfile.id);
+
+      if (error) {
+        showToast('error', tCommon('error'), error.message);
+        return;
+      }
+
+      setUserProfile((prev: any) =>
+        prev
+          ? {
+              ...prev,
+              pago_movil: pagoMovil,
+              binance_email: binanceEmail,
+              zinli_email: zinliEmail,
+            }
+          : prev
+      );
+
+      showToast(
+        'success',
+        tCommon('success'),
+        t('wallet_sub')
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'pendiente':
+        return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30';
+      case 'completado':
+        return 'bg-green-500/10 text-green-500 border-green-500/30';
+      case 'cancelado':
+        return 'bg-red-500/10 text-red-500 border-red-500/30';
+      default:
+        return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
+    }
+  };
+
+  const isP2POrder = (order: any) =>
+    typeof order?.product_name === 'string' &&
+    order.product_name.toLowerCase().startsWith('oferta p2p');
+
+  const getOrderAccent = (order: any) => {
+    if (isP2POrder(order)) {
+      return {
+        badge: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+        border: 'border-purple-500/20',
+        glow: 'shadow-[0_0_25px_rgba(168,85,247,0.10)]',
+        title: 'text-purple-300',
+        label: tTienda('p2p_offer'),
+      };
+    }
+
+    const product = String(order?.product_name || '').toLowerCase();
+
+    if (product.includes('venta mk')) {
+      return {
+        badge: 'bg-[#00A8FF]/10 text-[#00A8FF] border-[#00A8FF]/30',
+        border: 'border-[#00A8FF]/20',
+        glow: 'shadow-[0_0_25px_rgba(0,168,255,0.10)]',
+        title: 'text-[#00A8FF]',
+        label: 'Venta',
+      };
+    }
+
+    if (product.includes('compra mk')) {
+      return {
+        badge: 'bg-[#FBB03B]/10 text-[#FBB03B] border-[#FBB03B]/30',
+        border: 'border-[#FBB03B]/20',
+        glow: 'shadow-[0_0_25px_rgba(251,176,59,0.10)]',
+        title: 'text-[#FBB03B]',
+        label: 'Compra',
+      };
+    }
+
+    if (product.includes('intercambio')) {
+      return {
+        badge: 'bg-green-400/10 text-green-400 border-green-400/30',
+        border: 'border-green-400/20',
+        glow: 'shadow-[0_0_25px_rgba(74,222,128,0.10)]',
+        title: 'text-green-400',
+        label: 'Intercambio',
+      };
+    }
+
+    return {
+      badge: 'bg-gray-500/10 text-gray-300 border-gray-500/30',
+      border: 'border-gray-700',
+      glow: '',
+      title: 'text-white',
+      label: t('order_id'),
+    };
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A8FF]"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] text-white p-6 md:p-12 font-sans relative overflow-hidden">
+      <NeonToast
+        open={toast.open}
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        onClose={() => setToast((prev) => ({ ...prev, open: false }))}
+      />
+
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#00A8FF]/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div className="max-w-5xl mx-auto relative z-10 animate-fade-in">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight flex items-center gap-3">
+              <span className="text-[#00A8FF]">{t('title').split(' ')[0]}</span> {t('title').split(' ')[1]}
+            </h1>
+            <p className="text-gray-400 mt-2 text-sm tracking-wide">
+              {t('subtitle')} <span className="text-white font-bold">{userProfile?.full_name}</span>
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/"
+              className="px-6 py-3 bg-[#121826] border border-gray-800 hover:border-[#00A8FF]/50 rounded-xl font-bold uppercase text-xs transition-all shadow-lg"
+            >
+              {t('go_store')}
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="px-6 py-3 bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-xl font-bold uppercase text-xs transition-all shadow-lg"
+            >
+              {t('logout')}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1 space-y-8">
+            <div className="bg-[#121826] border border-gray-800 rounded-3xl p-6 shadow-2xl">
+              <h2 className="text-[#00A8FF] font-black uppercase tracking-widest text-xs mb-4">
+                {t('credentials')}
+              </h2>
+              <div className="space-y-4">
+                <div className="bg-[#0B0F19] border border-gray-800/50 p-4 rounded-2xl">
+                  <p className="text-[10px] text-gray-500 uppercase font-black mb-1">
+                    {tTienda('email_label') || 'Email'}
+                  </p>
+                  <p className="text-white font-bold text-sm truncate">{userProfile?.email}</p>
+                </div>
+                <div className="bg-[#0B0F19] border border-[#25D366]/20 p-4 rounded-2xl">
+                  <p className="text-[10px] text-[#25D366] uppercase font-black mb-1">
+                    {tTienda('whatsapp_label') || 'WhatsApp'}
+                  </p>
+                  <p className="text-white font-bold text-sm">{userProfile?.whatsapp}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#121826] border border-[#FBB03B]/30 rounded-3xl p-6 shadow-[0_0_30px_rgba(251,176,59,0.05)]">
+              <h2 className="text-[#FBB03B] font-black uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+                {t('wallet')}
+              </h2>
+              <p className="text-[10px] text-gray-400 mb-6 leading-relaxed">
+                {t('wallet_sub')}
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                    {t('wallet_pago_movil')}
+                  </label>
+                  <textarea
+                    value={pagoMovil}
+                    onChange={(e) => setPagoMovil(e.target.value)}
+                    placeholder="Ej: Banesco 0412-1234567 V-12345678"
+                    className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-3 text-white text-xs outline-none focus:border-[#FBB03B]/50 min-h-[60px]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                    {t('wallet_binance')}
+                  </label>
+                  <input
+                    type="email"
+                    value={binanceEmail}
+                    onChange={(e) => setBinanceEmail(e.target.value)}
+                    placeholder="tu-correo@binance.com"
+                    className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-3 text-white text-xs outline-none focus:border-[#FBB03B]/50"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                    {t('wallet_zinli')}
+                  </label>
+                  <input
+                    type="email"
+                    value={zinliEmail}
+                    onChange={(e) => setZinliEmail(e.target.value)}
+                    placeholder="tu-correo@zinli.com"
+                    className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-3 text-white text-xs outline-none focus:border-[#FBB03B]/50"
+                  />
+                </div>
+
+                <button
+                  onClick={handleSaveWallet}
+                  disabled={saving}
+                  className="w-full py-3 bg-[#FBB03B] text-black font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-yellow-400 disabled:opacity-50 transition-all shadow-lg shadow-[#FBB03B]/20 mt-2"
+                >
+                  {saving ? tCommon('loading') : t('save_wallet')}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2">
+            <div className="bg-[#121826] border border-gray-800 rounded-3xl p-6 md:p-8 shadow-2xl h-full">
+              <div className="mb-6">
+                <h2 className="text-white font-black uppercase tracking-widest text-sm flex items-center gap-2">
+                  {t('history')}
+                  <span className="bg-[#00A8FF]/20 text-[#00A8FF] px-2 py-0.5 rounded-full text-[10px]">
+                    {orders.length}
+                  </span>
+                </h2>
+                <p className="text-gray-400 text-xs mt-2 tracking-wide">
+                  {t('history_sub')}
+                </p>
+              </div>
+
+              {orders.length === 0 ? (
+                <div className="text-center py-20 border border-gray-800 border-dashed rounded-2xl bg-[#0B0F19]">
+                  <span className="text-4xl block mb-4 opacity-50">🛍️</span>
+                  <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">
+                    {t('no_orders')}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                  {orders.map((order) => {
+                    const accent = getOrderAccent(order);
+                    
+                    return (
+                      <div
+                        key={order.id}
+                        className={`bg-[#0B0F19] border rounded-2xl p-5 ${accent.border} ${accent.glow} transition-all`}
+                      >
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                          <div className="space-y-3 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-mono text-[10px] text-[#00A8FF] bg-[#00A8FF]/10 px-2 py-1 rounded border border-[#00A8FF]/20">
+                                #{order.id?.toString().substring(0, 8)}
+                              </span>
+
+                              <span
+                                className={`text-[10px] uppercase font-black px-3 py-1 rounded-full border tracking-[0.18em] ${accent.badge}`}
+                              >
+                                {accent.label}
+                              </span>
+
+                              <span
+                                className={`text-[10px] uppercase font-black px-3 py-1 rounded-full border tracking-[0.18em] ${getStatusColor(order.status)}`}
+                              >
+                                {order.status}
+                              </span>
+                            </div>
+
+                            <div>
+                              <h4 className={`text-lg font-black uppercase tracking-[0.02em] ${accent.title}`}>
+                                {order.product_name}
+                              </h4>
+                              <p className="text-sm text-gray-300 mt-1">{order.variant_name}</p>
+                            </div>
+                          </div>
+
+                          <div className="md:text-right min-w-[120px] shrink-0">
+                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">
+                              {t('date')}
+                            </p>
+                            <p className="text-xs text-gray-300 font-semibold">
+                              {order.created_at
+                                ? new Date(order.created_at).toLocaleDateString()
+                                : '...'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/reset-password/page.tsx">
+"use client";
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { supabase } from '../../../lib/supabase';
+
+export default function ResetPasswordPage() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  useEffect(() => {
+    const prepareRecoverySession = async () => {
+      try {
+        const hash = window.location.hash;
+        const params = new URLSearchParams(hash.replace('#', ''));
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+        const type = params.get('type');
+
+        if (type !== 'recovery' || !accessToken || !refreshToken) {
+          setError('El enlace de recuperación no es válido o ha expirado.');
+          setLoading(false);
+          return;
+        }
+
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (error) {
+          setError('No se pudo validar la sesión de recuperación.');
+          setLoading(false);
+          return;
+        }
+
+        setReady(true);
+      } catch {
+        setError('No se pudo preparar la recuperación de contraseña.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    prepareRecoverySession();
+  }, []);
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (password.length < 6) {
+      setError('La nueva contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password,
+      });
+
+      if (error) throw new Error(error.message);
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        router.push('/login');
+      }, 2500);
+    } catch (err: any) {
+      setError(err.message || 'No se pudo actualizar la contraseña.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A8FF]"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00A8FF]/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FBB03B]/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div className="bg-[#121826] border border-gray-800 p-8 md:p-10 rounded-[30px] w-full max-w-md shadow-2xl relative z-10 animate-fade-in">
+        <div className="text-center mb-8">
+          <Link href="/">
+            <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter hover:scale-105 transition-transform inline-block cursor-pointer mb-2">
+              KHAZONLI<span className="text-[#00A8FF]">.ES</span>
+            </h1>
+          </Link>
+          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+            Nueva contraseña
+          </p>
+        </div>
+
+        {success ? (
+          <div className="text-center py-6 animate-fade-in">
+            <div className="w-20 h-20 bg-[#00A8FF]/10 border border-[#00A8FF]/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(0,168,255,0.2)]">
+              <span className="text-4xl">🔐</span>
+            </div>
+            <h2 className="text-2xl font-black text-white uppercase tracking-widest mb-2">
+              Contraseña actualizada
+            </h2>
+            <p className="text-[#00A8FF] font-bold text-sm mb-6">
+              Ya puedes iniciar sesión
+            </p>
+            <p className="text-gray-500 text-xs uppercase tracking-widest animate-pulse">
+              Redirigiendo al acceso...
+            </p>
+          </div>
+        ) : !ready ? (
+          <div className="text-center py-8">
+            <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
+              <p className="text-red-400 text-xs font-bold uppercase tracking-wider">
+                {error || 'No se pudo validar el enlace de recuperación.'}
+              </p>
+            </div>
+
+            <Link
+              href="/forgot-password"
+              className="inline-block mt-6 px-6 py-3 bg-[#00A8FF] text-[#0B0F19] font-black uppercase text-xs tracking-widest rounded-xl hover:bg-blue-400 transition-all shadow-lg shadow-[#00A8FF]/20"
+            >
+              Solicitar un nuevo enlace
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6 rounded-2xl border border-[#00A8FF]/15 bg-[#0B0F19]/80 px-4 py-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[#00A8FF]">
+                Restablecer acceso
+              </p>
+              <p className="mt-2 text-[12px] leading-relaxed text-gray-400">
+                Define una nueva contraseña segura para volver a entrar en tu cuenta.
+              </p>
+            </div>
+
+            <form onSubmit={handleUpdatePassword} className="space-y-4">
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                  Nueva Contraseña
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2 ml-1">
+                  Confirmar Contraseña
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mt-4">
+                  <p className="text-red-500 text-[10px] font-bold text-center uppercase tracking-wider">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full mt-6 py-4 bg-[#00A8FF] text-[#0B0F19] font-black uppercase text-xs tracking-widest rounded-xl hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#00A8FF]/20"
+              >
+                {saving ? 'Actualizando acceso...' : 'Guardar nueva contraseña'}
+              </button>
+            </form>
+          </>
+        )}
+
+        <div className="mt-8 text-center border-t border-gray-800 pt-6">
+          <Link
+            href="/login"
+            className="text-gray-500 hover:text-white text-[10px] font-bold uppercase transition-colors tracking-widest"
+          >
+            ← Volver al login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/servicios/page.tsx">
+import Link from 'next/link';
+
+export default function ServiciosPro() {
+  const whatsappNumber = "584124989220"; 
+  const message = encodeURIComponent("Buenas tardes, quiero cotizar mi proyecto. ¿Está disponible?");
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+  const servicios = [
+    {
+      title: "Desarrollo Web",
+      desc: "Interfaces ultra-rápidas con Next.js y React. Optimizamos tu presencia digital con diseño industrial.",
+      icon: "/Desarrollo Web.jpg"// 🟢 Nombre corregido sin espacios
+    },
+    {
+      title: "Automatización",
+      desc: "Eliminamos el trabajo manual. Analizamos cuellos de botella y creamos flujos de datos que trabajan por ti.",
+      icon: "/Automatización.jpg"
+    },
+    {
+      title: "Bots de Mando",
+      desc: "Atención 24/7 sin nómina. Asistentes inteligentes para Telegram y WhatsApp integrados con IA.",
+      icon: "/Bots de Mando.jpg"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] text-white p-8 md:p-24 selection:bg-khaz-gold selection:text-black">
+      <div className="max-w-6xl mx-auto">
+        
+        <Link href="/" className="group text-gray-500 text-xs font-bold uppercase tracking-[0.3em] hover:text-[#00A8FF] transition-colors mb-12 inline-flex items-center">
+          <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span> Volver a la Central
+        </Link>
+        
+        <header className="mb-20">
+          <h1 className="text-6xl md:text-7xl font-black mb-4 uppercase tracking-tighter italic">
+            Servicios <span className="text-khaz-gold">Pro</span>
+          </h1>
+          <div className="h-1 w-24 bg-khaz-gold"></div>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {servicios.map((s) => (
+            <div key={s.title} className="bg-[#121826]/50 border border-gray-800 p-1 rounded-3xl hover:border-khaz-gold transition-all duration-500 group overflow-hidden shadow-2xl">
+              <div className="p-8">
+                <div className="relative h-48 w-full mb-8 overflow-hidden rounded-2xl bg-[#0B0F19] border border-gray-800/50">
+                  <img 
+                    src={s.icon} 
+                    alt={s.title}
+                    className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 grayscale group-hover:grayscale-0"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#121826] to-transparent"></div>
+                </div>
+
+                <h3 className="text-xl font-black uppercase mb-4 tracking-widest group-hover:text-khaz-gold transition-colors italic">
+                  {s.title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-200 transition-colors">
+                  {s.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* SECCIÓN COTIZAR */}
+        <div className="relative mt-32 p-[1px] bg-gradient-to-r from-transparent via-khaz-gold/40 to-transparent rounded-3xl overflow-hidden">
+          <div className="bg-[#121826]/80 backdrop-blur-sm p-12 rounded-3xl text-center relative z-10 border border-white/5">
+            <h2 className="text-3xl font-black uppercase mb-4 italic text-white">
+              ¿Tienes un proyecto <span className="text-khaz-gold">en mente?</span>
+            </h2>
+            <p className="mb-10 text-gray-400 max-w-lg mx-auto font-medium">
+              Llevamos tu idea al nivel de ingeniería que Khazonli representa. Diseño robusto, escalable y optimizado.
+            </p>
+            <a 
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-khaz-gold text-black px-12 py-5 rounded-full font-black uppercase tracking-[0.2em] hover:shadow-[0_0_30px_rgba(251,176,59,0.5)] hover:scale-105 transition-all duration-300 active:scale-95"
+            >
+              Cotizar vía WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <footer className="mt-24 text-center">
+             <p className="text-gray-700 text-[10px] uppercase tracking-[0.5em] font-bold">
+               Khazonli Industrial Engineering Systems © {new Date().getFullYear()}
+             </p>
+        </footer>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/[locale]/tienda/page.tsx">
+"use client";
+
+import Footer from '@/components/Footer';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import TradingBoard from '@/components/TradingBoard';
+
+import { useTiendaData } from '@/components/tienda/hooks/useTiendaData';
+import { useTiendaFilters } from '@/components/tienda/hooks/useTiendaFilters';
+import { useTiendaOrder } from '@/components/tienda/hooks/useTiendaOrder';
+import { useTiendaEvents } from '@/components/tienda/hooks/useTiendaEvents';
+
+import StoreHero from '@/components/tienda/StoreHero';
+import CategoryTabs from '@/components/tienda/CategoryTabs';
+import SearchBar from '@/components/tienda/SearchBar';
+import ProductCard from '@/components/tienda/ProductCard';
+import EventCard from '@/components/tienda/EventCard';
+import ProductModal from '@/components/tienda/ProductModal';
+import EventModal from '@/components/tienda/EventModal';
+
+export default function TiendaGamer() {
+  const t = useTranslations('Tienda');
+  const tCommon = useTranslations('common');
+
+  const {
+    activeCategory,
+    setActiveCategory,
+    storeStatus,
+    catalogProducts,
+    rates,
+    payments,
+    events,
+    searchQuery,
+    setSearchQuery,
+    currentUser,
+    userProfile,
+  } = useTiendaData();
+
+  const { allCategories, currentCategoryProducts, filteredEvents } =
+    useTiendaFilters(catalogProducts, events, activeCategory, searchQuery);
+
+  const {
+    selectedProduct,
+    setSelectedProduct,
+    selectedVariant,
+    setSelectedVariant,
+    step,
+    setStep,
+    selectedPayment,
+    setSelectedPayment,
+    isCopied,
+    setIsCopied,
+    walletAmount,
+    setWalletAmount,
+    paymentDetails,
+    setPaymentDetails,
+    customerPhone,
+    setCustomerPhone,
+    walletReceiverEmail,
+    setWalletReceiverEmail,
+    isWalletProduct,
+    paymentDetailLabel,
+    paymentDetailPlaceholder,
+    resetModals,
+    handleFinalOrder,
+  } = useTiendaOrder({
+    currentUser,
+    userProfile,
+    rates,
+  });
+
+  const {
+    selectedEvent,
+    eventRegisterLoading,
+    eventRegisterSuccess,
+    eventParticipants,
+    eventForm,
+    setEventForm,
+    handleOpenEvent,
+    handleCloseEvent,
+    handleRegisterEvent,
+  } = useTiendaEvents();
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#0B0F19] via-[#0B0F19] to-black pt-24 pb-10">
+      <StoreHero storeStatus={storeStatus} />
+
+      <div className="w-full max-w-6xl mx-auto px-6 mb-8 space-y-6">
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 bg-[#121826]/50 p-2 rounded-2xl border border-gray-800/50 backdrop-blur-md">
+          <CategoryTabs
+            allCategories={allCategories}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+            setSearchQuery={setSearchQuery}
+          />
+
+          <Link
+            href="/"
+            className="text-gray-600 hover:text-white text-sm font-bold ml-auto pr-4 uppercase tracking-widest transition-colors"
+          >
+            ← {tCommon('back')}
+          </Link>
+        </div>
+
+        <SearchBar
+          activeCategory={activeCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+      </div>
+
+      <div className="w-full max-w-6xl mx-auto px-6 relative z-10 animate-fade-in">
+        {activeCategory === 'mmo' ? (
+          <TradingBoard />
+        ) : activeCategory === 'eventos' ? (
+          <div className="space-y-8">
+            <div className="text-center">
+              <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-[0.04em]">
+                {t('events_zone').split(' ')[0]}{' '}
+                <span className="text-[#00A8FF] drop-shadow-[0_0_14px_rgba(0,168,255,0.25)]">
+                  {t('events_zone').split(' ')[1]}
+                </span>
+              </h2>
+              <p className="text-gray-400 mt-3 text-sm md:text-base tracking-[0.04em]">
+                {t('events_sub')}
+              </p>
+            </div>
+
+            {filteredEvents.length === 0 ? (
+              <div className="text-center py-16 text-gray-500 font-bold uppercase tracking-widest border border-gray-800 rounded-3xl bg-[#121826]/50">
+                {t('no_events')}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredEvents.map((ev) => (
+                  <EventCard key={ev.id} ev={ev} onOpen={handleOpenEvent} />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {currentCategoryProducts.map((item) => (
+              <ProductCard
+                key={item.id}
+                item={item}
+                storeStatus={storeStatus}
+                onSelect={(product) => {
+                  setSelectedProduct(product);
+                  setStep(1);
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* MODALES CON PROPS COMPLETAS */}
+      <ProductModal
+        selectedProduct={selectedProduct}
+        selectedVariant={selectedVariant}
+        setSelectedVariant={setSelectedVariant}
+        step={step}
+        setStep={setStep}
+        selectedPayment={selectedPayment}
+        setSelectedPayment={setSelectedPayment}
+        payments={payments}
+        userProfile={userProfile}
+        isWalletProduct={isWalletProduct}
+        walletAmount={walletAmount}
+        setWalletAmount={setWalletAmount}
+        rates={rates}
+        resetModals={resetModals}
+        isCopied={isCopied}
+        setIsCopied={setIsCopied}
+        paymentDetails={paymentDetails}
+        setPaymentDetails={setPaymentDetails}
+        customerPhone={customerPhone}
+        setCustomerPhone={setCustomerPhone}
+        walletReceiverEmail={walletReceiverEmail}
+        setWalletReceiverEmail={setWalletReceiverEmail}
+        paymentDetailLabel={paymentDetailLabel}
+        paymentDetailPlaceholder={paymentDetailPlaceholder}
+        handleFinalOrder={handleFinalOrder}
+      />
+
+      <EventModal
+        selectedEvent={selectedEvent}
+        eventRegisterLoading={eventRegisterLoading}
+        eventRegisterSuccess={eventRegisterSuccess}
+        eventParticipants={eventParticipants}
+        eventForm={eventForm}
+        setEventForm={setEventForm}
+        handleCloseEvent={handleCloseEvent}
+        handleRegisterEvent={handleRegisterEvent}
+      />
+
+      <Footer />
+    </div>
+  );
+}
+</file>
+
+<file path="app/admin/layout.tsx">
+import { ReactNode } from 'react';
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="es">
+      <body className="bg-[#0B0F19] text-white antialiased">
+        {children}
+      </body>
+    </html>
+  );
+}
+</file>
+
+<file path="app/admin/page.tsx">
+"use client";
+
+import { useEffect, useRef, useState } from 'react';
+import NeonToast from '../../components/NeonToast';
+import { getOrderType } from '../../components/admin/utils/adminHelpers';
+import { supabase } from '../../lib/supabase';
+
+import AdminHeader from '../../components/admin/AdminHeader';
+import AdminTabs from '../../components/admin/AdminTabs';
+import ConfirmModal from '../../components/admin/shared/ConfirmModal';
+import PaymentModal from '../../components/admin/modals/PaymentModal';
+import VariantModal from '../../components/admin/modals/VariantModal';
+import EventParticipantsModal from '../../components/admin/modals/EventParticipantsModal';
+import DashboardTab from '../../components/admin/tabs/DashboardTab';
+import MmoTab from '../../components/admin/tabs/MmoTab';
+import CatalogoTab from '../../components/admin/tabs/CatalogoTab';
+import EventosTab from '../../components/admin/tabs/EventosTab';
+import RatesPreviewCard from '../../components/admin/RatesPreviewCard';
+
+import { useAdminToast } from '../../components/admin/hooks/useAdminToast';
+import { useAdminAuth } from '../../components/admin/hooks/useAdminAuth';
+import { useAdminConfirm } from '../../components/admin/hooks/useAdminConfirm';
+import { useAdminLoaders } from '../../components/admin/hooks/useAdminLoaders';
+import { useAdminActions } from '../../components/admin/hooks/useAdminActions';
+import { useAdminFormHandlers } from '../../components/admin/hooks/useAdminFormHandlers';
+import { useRatesPreviewDownload } from '../../components/admin/hooks/useRatesPreviewDownload';
+
+export default function AdminDashboard() {
+  const [uploading, setUploading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'mmo' | 'catalogo' | 'eventos'>('dashboard');
+
+  const [servers, setServers] = useState<any[]>([]);
+  const [newServer, setNewServer] = useState({ game: '', name: '', buy: '', sell: '' });
+
+  const [stocks, setStocks] = useState<any[]>([]);
+  const [newStock, setNewStock] = useState({
+    game: '',
+    server_name: '',
+    price_usd: '',
+    stock_mk: '',
+  });
+
+  const [routes, setRoutes] = useState<any[]>([]);
+  const [newRoute, setNewRoute] = useState({
+    server_from: '',
+    server_to: '',
+    mode: 'fijo',
+    rate: '',
+  });
+
+  const [rates, setRates] = useState({ id: null as number | null, buy: 0, sell: 0 });
+  const [storeStatus, setStoreStatus] = useState<string>('activo');
+  const [payments, setPayments] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    category: '',
+    description: '',
+    icon: '',
+    tag: '',
+  });
+
+  const [metrics, setMetrics] = useState({
+    total: 0,
+    pending: 0,
+    completed: 0,
+    cancelled: 0,
+    buyMk: 0,
+    sellMk: 0,
+    exchanges: 0,
+    p2p: 0,
+    wallet: 0,
+    volumeBs: 0,
+    volumeUsd: 0,
+  });
+
+  const [events, setEvents] = useState<any[]>([]);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    slug: '',
+    event_type: 'sorteo',
+    status: 'draft',
+    description: '',
+    rules: '',
+    banner_url: '',
+    game_name: '',
+    mode_name: '',
+    prize: '',
+    entry_price_usd: '',
+    entry_price_bs: '',
+    start_date: '',
+    end_date: '',
+    max_participants: '',
+    registration_mode: 'form',
+    phone_required: false,
+    requires_number_selection: false,
+    number_range_min: '',
+    number_range_max: '',
+    is_featured: false,
+  });
+
+  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [isParticipantsModalOpen, setIsParticipantsModalOpen] = useState(false);
+  const [selectedEventForParticipants, setSelectedEventForParticipants] = useState<any>(null);
+
+  const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [variantForm, setVariantForm] = useState({
+    name: '',
+    priceText: '',
+    priceUsd: '',
+  });
+
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [paymentForm, setPaymentForm] = useState({
+    name: '',
+    details: '',
+  });
+
+  const { toast, setToast, showToast } = useAdminToast();
+
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    error,
+    session,
+    handleLogin,
+    handleLogout,
+  } = useAdminAuth();
+
+  const {
+    confirmModal,
+    askForConfirmation,
+    executeConfirmation,
+    cancelConfirmation,
+  } = useAdminConfirm();
+
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const { downloadImage } = useRatesPreviewDownload({
+    cardRef,
+    showToast,
+  });
+
+  const {
+    refreshDashboardData,
+    loadServers,
+    loadStocks,
+    loadRoutes,
+    loadProducts,
+    loadPayments,
+    loadEvents,
+    loadMetrics,
+  } = useAdminLoaders({
+    setServers,
+    setStocks,
+    setRoutes,
+    setRates,
+    setStoreStatus,
+    setProducts,
+    setPayments,
+    setEvents,
+    setMetrics,
+    getOrderType,
+  });
+
+  const {
+    handleSaveServer,
+    handleCreateServer,
+    handleDeleteServer,
+    handleSaveStock,
+    handleCreateStock,
+    handleDeleteStock,
+    handleSaveRoute,
+    handleCreateRoute,
+    handleDeleteRoute,
+    handleSaveRates,
+    handleUpdateStatus,
+    handleSavePayment,
+    handleDeletePayment,
+    handleUploadImage,
+    handleCreateProduct,
+    openVariantModal,
+    handleSaveVariant,
+    handleDeleteVariant,
+    handleDeleteProduct,
+    handleCreateEvent,
+    handleUpdateEventStatus,
+    handleToggleFeatured,
+    handleDeleteEvent,
+    openParticipantsModal,
+  } = useAdminActions({
+    showToast,
+
+    newServer,
+    setNewServer,
+    loadServers,
+
+    newStock,
+    setNewStock,
+    loadStocks,
+
+    newRoute,
+    setNewRoute,
+    loadRoutes,
+
+    rates,
+    setRates,
+    setStoreStatus,
+
+    paymentForm,
+    setPaymentForm,
+    setIsPaymentModalOpen,
+    loadPayments,
+
+    newProduct,
+    setNewProduct,
+    setUploading,
+    loadProducts,
+
+    selectedProductId,
+    setSelectedProductId,
+    variantForm,
+    setVariantForm,
+    setIsVariantModalOpen,
+
+    newEvent,
+    setNewEvent,
+    loadEvents,
+
+    setRegistrations,
+    setSelectedEventForParticipants,
+    setIsParticipantsModalOpen,
+
+    loadMetrics,
+  });
+
+  const {
+    handleServerInputChange,
+    handleStockInputChange,
+    handleRouteInputChange,
+    handleEventFieldChange,
+  } = useAdminFormHandlers({
+    servers,
+    setServers,
+    stocks,
+    setStocks,
+    routes,
+    setRoutes,
+    setNewEvent,
+  });
+
+  useEffect(() => {
+    if (session) {
+      refreshDashboardData();
+    }
+  }, [session, refreshDashboardData]);
+
+  const wrappedDeleteServer = (serverName: string) =>
+    askForConfirmation(`¿Eliminar servidor ${serverName}?`, async () => {
+      await handleDeleteServer(serverName);
+    });
+
+  const wrappedDeleteStock = (id: number) =>
+    askForConfirmation('¿Eliminar este inventario?', async () => {
+      await handleDeleteStock(id);
+    });
+
+  const wrappedDeleteRoute = (id: number) =>
+    askForConfirmation('¿Eliminar ruta de intercambio?', async () => {
+      await handleDeleteRoute(id);
+    });
+
+  const wrappedDeletePayment = (id: number) =>
+    askForConfirmation('¿Eliminar método de pago?', async () => {
+      await handleDeletePayment(id);
+    });
+
+  const wrappedDeleteVariant = (id: number) =>
+    askForConfirmation('¿Borrar variante?', async () => {
+      await handleDeleteVariant(id);
+    });
+
+  const wrappedDeleteProduct = (id: number) =>
+    askForConfirmation('⚠️ ¿Eliminar producto y variantes?', async () => {
+      await handleDeleteProduct(id);
+    });
+
+  const wrappedDeleteEvent = (eventId: string, title: string) =>
+    askForConfirmation(`¿Eliminar el evento "${title}"?`, async () => {
+      await handleDeleteEvent(eventId, title);
+    });
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4">
+        <div className="bg-[#121826] border border-gray-800 p-8 rounded-3xl w-full max-w-md shadow-2xl">
+          <h1 className="text-2xl font-black text-white text-center mb-6 uppercase italic">
+            KHAZ <span className="text-[#00A8FF]">BÓVEDA</span>
+          </h1>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-4 text-white outline-none"
+              placeholder="Email"
+              required
+            />
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-4 text-white outline-none"
+              placeholder="Password"
+              required
+            />
+         <div className="flex justify-end -mt-1">
+           <a
+               href="/forgot-password"
+    className="text-[10px] font-black uppercase tracking-widest text-[#00A8FF] hover:text-white transition-colors"
+  >
+    ¿Olvidaste tu contraseña?
+  </a>
+</div>
+
+            <button
+              type="submit"
+              className="w-full py-4 bg-[#00A8FF] text-[#0B0F19] font-black rounded-xl uppercase hover:bg-blue-400 transition-colors"
+            >
+              {loading ? 'Entrando...' : 'Entrar'}
+            </button>
+
+            {error && <p className="text-red-500 text-sm text-center font-bold">{error}</p>}
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  const activeServers = servers.filter((s) => s.is_active);
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] p-4 md:p-8 relative">
+      <NeonToast
+        open={toast.open}
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        onClose={() => setToast((prev) => ({ ...prev, open: false }))}
+      />
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        message={confirmModal.message}
+        onCancel={cancelConfirmation}
+        onConfirm={executeConfirmation}
+      />
+
+      <VariantModal
+        isOpen={isVariantModalOpen}
+        variantForm={variantForm}
+        setVariantForm={setVariantForm}
+        onClose={() => setIsVariantModalOpen(false)}
+        onSave={handleSaveVariant}
+      />
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        paymentForm={paymentForm}
+        setPaymentForm={setPaymentForm}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onSave={handleSavePayment}
+      />
+
+      <EventParticipantsModal
+        isOpen={isParticipantsModalOpen}
+        registrations={registrations}
+        selectedEventForParticipants={selectedEventForParticipants}
+        onClose={() => setIsParticipantsModalOpen(false)}
+        onCopyList={() => {
+          const text = registrations
+            .map(
+              (r, i) =>
+                `${i + 1}. ${r.character_name || r.full_name} ${r.selected_number ? `(#${r.selected_number})` : ''}`
+            )
+            .join('\n');
+
+          navigator.clipboard.writeText(text);
+          showToast('success', 'Lista copiada', 'Los participantes fueron copiados al portapapeles.');
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto space-y-6">
+        <AdminHeader onLogout={handleLogout} />
+        <AdminTabs activeTab={activeTab} onChange={setActiveTab} />
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+          <div className="xl:col-span-2 space-y-8 min-h-[500px]">
+            {activeTab === 'dashboard' && (
+              <DashboardTab
+                metrics={metrics}
+                storeStatus={storeStatus}
+                rates={rates}
+                setRates={setRates}
+                payments={payments}
+                onUpdateStatus={handleUpdateStatus}
+                onSaveRates={handleSaveRates}
+                onOpenPaymentModal={() => setIsPaymentModalOpen(true)}
+                onDeletePayment={wrappedDeletePayment}
+              />
+            )}
+
+            {activeTab === 'mmo' && (
+              <MmoTab
+                servers={servers}
+                newServer={newServer}
+                setNewServer={setNewServer}
+                onServerInputChange={handleServerInputChange}
+                onSaveServer={handleSaveServer}
+                onCreateServer={handleCreateServer}
+                onDeleteServer={wrappedDeleteServer}
+                stocks={stocks}
+                newStock={newStock}
+                setNewStock={setNewStock}
+                onStockInputChange={handleStockInputChange}
+                onSaveStock={handleSaveStock}
+                onCreateStock={handleCreateStock}
+                onDeleteStock={wrappedDeleteStock}
+                routes={routes}
+                newRoute={newRoute}
+                setNewRoute={setNewRoute}
+                onRouteInputChange={handleRouteInputChange}
+                onSaveRoute={handleSaveRoute}
+                onCreateRoute={handleCreateRoute}
+                onDeleteRoute={wrappedDeleteRoute}
+              />
+            )}
+
+            {activeTab === 'catalogo' && (
+              <CatalogoTab
+                products={products}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                uploading={uploading}
+                rates={rates}
+                onUploadImage={handleUploadImage}
+                onCreateProduct={handleCreateProduct}
+                onOpenVariantModal={openVariantModal}
+                onDeleteProduct={wrappedDeleteProduct}
+                onDeleteVariant={wrappedDeleteVariant}
+              />
+            )}
+
+            {activeTab === 'eventos' && (
+              <EventosTab
+                events={events}
+                newEvent={newEvent}
+                uploading={uploading}
+                setUploading={setUploading}
+                handleEventFieldChange={handleEventFieldChange}
+                handleCreateEvent={handleCreateEvent}
+                handleUpdateEventStatus={handleUpdateEventStatus}
+                openParticipantsModal={openParticipantsModal}
+                handleToggleFeatured={handleToggleFeatured}
+                handleDeleteEvent={wrappedDeleteEvent}
+                showToast={showToast}
+                supabase={supabase}
+              />
+            )}
+          </div>
+
+          <div className="xl:col-span-1">
+            <RatesPreviewCard
+              cardRef={cardRef}
+              activeServers={activeServers}
+              rates={rates}
+              onDownload={downloadImage}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/admin/tickets/page.tsx">
+"use client";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { supabase } from '../../../lib/supabase';
+
+export default function TicketsAdmin() {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('todos');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchOrders();
+
+    const channel = supabase
+      .channel('realtime-orders')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'digital_orders' },
+        (payload) => {
+          setOrders((current) => [payload.new, ...current]);
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'digital_orders' },
+        (payload) => {
+          setOrders((current) =>
+            current.map((order) => (order.id === payload.new.id ? payload.new : order))
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('digital_orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error cargando órdenes:', error);
+    } else {
+      setOrders(data || []);
+    }
+    setLoading(false);
+  };
+
+  const updateOrderStatus = async (id: string | number, newStatus: string) => {
+    setOrders((current) => current.map((o) => (o.id === id ? { ...o, status: newStatus } : o)));
+
+    const { error } = await supabase
+      .from('digital_orders')
+      .update({ status: newStatus })
+      .eq('id', id);
+
+    if (error) {
+      alert('Error al actualizar el estado. Revisa la conexión.');
+      fetchOrders();
+    }
+  };
+
+  const filteredOrders = orders.filter((o) => {
+    const matchesFilter = filter === 'todos' || o.status === filter;
+    const searchLower = searchTerm.toLowerCase();
+
+    const matchesSearch =
+      o.id.toString().includes(searchLower) ||
+      (o.customer_phone || '').toLowerCase().includes(searchLower) ||
+      (o.product_name || '').toLowerCase().includes(searchLower) ||
+      (o.payment_method || '').toLowerCase().includes(searchLower) ||
+      (o.payment_details || '').toLowerCase().includes(searchLower) ||
+      (o.variant_name || '').toLowerCase().includes(searchLower);
+
+    return matchesFilter && matchesSearch;
+  });
+
+  const getStatusColor = (status: string) => {
+    switch ((status || '').toLowerCase()) {
+      case 'pendiente':
+        return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30';
+      case 'completado':
+        return 'bg-green-500/10 text-green-500 border-green-500/30';
+      case 'cancelado':
+        return 'bg-red-500/10 text-red-500 border-red-500/30';
+      default:
+        return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
+    }
+  };
+
+  const isP2POrder = (order: any) =>
+    typeof order?.product_name === 'string' &&
+    order.product_name.toLowerCase().startsWith('oferta p2p');
+
+  const isWalletOrder = (order: any) => {
+    const product = String(order?.product_name || '').toLowerCase();
+    const variant = String(order?.variant_name || '').toLowerCase();
+    return product.includes('wallet') || product.includes('recarga') || variant.includes('recarga');
+  };
+
+  const getOrderTypeMeta = (order: any) => {
+    const product = String(order?.product_name || '').toLowerCase();
+
+    if (isP2POrder(order)) {
+      return {
+        label: 'P2P',
+        badge: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+        title: 'text-purple-300',
+      };
+    }
+
+    if (isWalletOrder(order)) {
+      return {
+        label: 'Wallet',
+        badge: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30',
+        title: 'text-cyan-300',
+      };
+    }
+
+    if (product.includes('venta mk')) {
+      return {
+        label: 'Venta',
+        badge: 'bg-[#00A8FF]/10 text-[#00A8FF] border-[#00A8FF]/30',
+        title: 'text-[#00A8FF]',
+      };
+    }
+
+    if (product.includes('compra mk')) {
+      return {
+        label: 'Compra',
+        badge: 'bg-[#FBB03B]/10 text-[#FBB03B] border-[#FBB03B]/30',
+        title: 'text-[#FBB03B]',
+      };
+    }
+
+    if (product.includes('intercambio')) {
+      return {
+        label: 'Intercambio',
+        badge: 'bg-green-400/10 text-green-400 border-green-400/30',
+        title: 'text-green-400',
+      };
+    }
+
+    return {
+      label: 'Orden',
+      badge: 'bg-gray-500/10 text-gray-300 border-gray-500/30',
+      title: 'text-white',
+    };
+  };
+
+  const formatTransactionAmount = (order: any) => {
+    const hasPriceText = order?.price_text !== null && order?.price_text !== undefined && String(order.price_text).trim() !== '';
+    const hasPriceBs = Number(order?.price_bs) > 0;
+
+    if (!hasPriceText && !hasPriceBs) return null;
+
+    return (
+      <div className="space-y-1">
+        {hasPriceText && (
+          <p className="text-xs font-black text-green-400 break-words">
+            {String(order.price_text).startsWith('$') ? order.price_text : `$${order.price_text}`}
+          </p>
+        )}
+        {hasPriceBs && (
+          <p className="text-[10px] font-bold text-gray-400">
+            {Number(order.price_bs).toFixed(2)} Bs
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0B0F19] text-white p-6 md:p-12 font-sans">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight flex items-center gap-3">
+              <span className="text-[#00A8FF]">Gestor:</span> Tickets
+            </h1>
+            <p className="text-gray-400 mt-2 text-sm tracking-wide">
+              Gestión centralizada de órdenes, recargas e historial de clientes.
+            </p>
+          </div>
+
+          <Link
+            href="/admin"
+            className="px-6 py-3 bg-[#121826] border border-gray-800 hover:border-[#00A8FF]/50 rounded-xl font-bold uppercase text-xs transition-all shadow-lg"
+          >
+            ← Volver al Admin Principal
+          </Link>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-4 mb-8 bg-[#121826] p-4 rounded-2xl border border-gray-800 items-center">
+          <div className="flex flex-wrap gap-2 w-full md:w-auto">
+            {['todos', 'pendiente', 'completado', 'cancelado'].map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 font-black uppercase text-[10px] md:text-xs rounded-xl transition-all ${
+                  filter === f
+                    ? 'bg-[#00A8FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,168,255,0.4)]'
+                    : 'bg-[#0B0F19] text-gray-400 border border-gray-800 hover:text-white'
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full md:flex-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">🔍</span>
+            <input
+              type="text"
+              placeholder="Buscar por WhatsApp, ID, Servicio, variante o referencia..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl py-2.5 pl-10 pr-4 text-white text-sm outline-none focus:border-[#00A8FF]/50 transition-colors"
+            />
+          </div>
+
+          <button
+            onClick={fetchOrders}
+            className="px-4 py-2 text-gray-500 hover:text-white transition-colors text-xs font-bold uppercase shrink-0"
+          >
+            🔄 Recargar
+          </button>
+        </div>
+
+        <div className="bg-[#121826] border border-gray-800 rounded-3xl overflow-hidden shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-[#0B0F19] text-gray-500 text-[10px] uppercase tracking-widest border-b border-gray-800">
+                  <th className="p-5 font-black">ID Ticket</th>
+                  <th className="p-5 font-black">Cliente / Contacto</th>
+                  <th className="p-5 font-black">Servicio / Detalles</th>
+                  <th className="p-5 font-black">Transacción</th>
+                  <th className="p-5 font-black">Estado</th>
+                  <th className="p-5 font-black text-right">Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-800">
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="p-10 text-center text-gray-500 uppercase tracking-widest font-bold text-xs"
+                    >
+                      Cargando datos de tickets...
+                    </td>
+                  </tr>
+                ) : filteredOrders.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="p-10 text-center text-gray-500 uppercase tracking-widest font-bold text-xs"
+                    >
+                      No hay tickets con esos criterios.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredOrders.map((order) => {
+                    const meta = getOrderTypeMeta(order);
+
+                    return (
+                      <tr key={order.id} className="hover:bg-white/[0.02] transition-colors align-top">
+                        <td className="p-5">
+                          <span className="font-mono text-xs text-gray-400 bg-[#0B0F19] px-2 py-1 rounded border border-gray-800">
+                            #{order.id.toString().substring(0, 8)}
+                          </span>
+                          <p className="text-[9px] text-gray-600 mt-2 font-mono">
+                            {new Date(order.created_at).toLocaleString()}
+                          </p>
+                        </td>
+
+                        <td className="p-5">
+                          {order.customer_phone ? (
+                            <div>
+                              <p className="font-black text-white text-sm tracking-wide mb-2 break-words">
+                                {order.customer_phone}
+                              </p>
+                              <a
+                                href={`https://wa.me/${order.customer_phone.replace(/\D/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest bg-[#25D366]/10 text-[#25D366] px-2 py-1 rounded border border-[#25D366]/30 hover:bg-[#25D366] hover:text-black transition-colors"
+                              >
+                                💬 WhatsApp
+                              </a>
+                            </div>
+                          ) : (
+                            <span className="text-gray-600 text-xs italic">Invitado (Sin número)</span>
+                          )}
+                        </td>
+
+                        <td className="p-5">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span
+                              className={`text-[10px] uppercase font-black px-3 py-1 rounded-full border tracking-[0.18em] ${meta.badge}`}
+                            >
+                              {meta.label}
+                            </span>
+                          </div>
+
+                          <p className={`font-black text-sm uppercase ${meta.title}`}>
+                            {order.product_name}
+                          </p>
+
+                          <p className="text-xs text-gray-300 font-medium mt-1 leading-relaxed">
+                            {order.variant_name}
+                          </p>
+
+                          {isP2POrder(order) && (
+                            <div className="mt-3 inline-block rounded-xl border border-purple-500/20 bg-purple-500/5 px-3 py-2">
+                              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-purple-300">
+                                Oferta negociable
+                              </p>
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="p-5">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="font-bold text-white text-xs uppercase mb-1">
+                                {order.payment_method || 'Sin método'}
+                              </p>
+                              {formatTransactionAmount(order)}
+                            </div>
+
+                            {order.payment_details && (
+                              <div className="bg-[#0B0F19] p-2 rounded-lg border border-gray-800">
+                                <p className="text-[9px] text-gray-500 uppercase font-black mb-1 tracking-widest">
+                                  Referencia / Detalles
+                                </p>
+                                <p className="text-[10px] text-gray-300 font-mono leading-relaxed break-words">
+                                  {order.payment_details}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="p-5">
+                          <span
+                            className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full border ${getStatusColor(order.status)}`}
+                          >
+                            {order.status}
+                          </span>
+                        </td>
+
+                        <td className="p-5 text-right space-x-2 whitespace-nowrap">
+                          {order.status !== 'completado' && (
+                            <button
+                              onClick={() => updateOrderStatus(order.id, 'completado')}
+                              className="p-2 bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white rounded-lg transition-colors border border-green-500/20"
+                              title="Marcar como Completado"
+                            >
+                              ✓
+                            </button>
+                          )}
+
+                          {order.status !== 'cancelado' && (
+                            <button
+                              onClick={() => updateOrderStatus(order.id, 'cancelado')}
+                              className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-colors border border-red-500/20"
+                              title="Cancelar Orden"
+                            >
+                              ✕
+                            </button>
+                          )}
+
+                          {order.status !== 'pendiente' && (
+                            <button
+                              onClick={() => updateOrderStatus(order.id, 'pendiente')}
+                              className="p-2 bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500 hover:text-black rounded-lg transition-colors border border-yellow-500/20"
+                              title="Marcar como Pendiente"
+                            >
+                              ⟳
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="app/layout.tsx">
+import { ReactNode } from 'react';
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  // Limpiamos todo: eliminamos html y body de aquí.
+  return children;
+}
+</file>
+
+<file path="next.config.ts">
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    // Aquí puedes poner otras opciones si las tenías
+};
+
+export default withNextIntl(nextConfig);
+</file>
+
+<file path="proxy.ts">
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+import createIntlMiddleware from 'next-intl/middleware'
+import { locales, localePrefix, defaultLocale } from './i18n/navigation'
+
+export default async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  let response = NextResponse.next({ request })
+
+  // 1. Omitir archivos estáticos e imágenes para mayor velocidad
+  if (pathname.includes('.')) return response;
+
+  // 2. Cliente de Supabase optimizado para Next.js 15/16
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) { return request.cookies.get(name)?.value },
+        set(name: string, value: string, options: CookieOptions) {
+          request.cookies.set({ name, value, ...options })
+          response = NextResponse.next({ request })
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: CookieOptions) {
+          request.cookies.set({ name, value: '', ...options })
+          response = NextResponse.next({ request })
+          response.cookies.set({ name, value: '', ...options })
+        },
+      },
+    }
+  )
+
+  // 3. Obtener la sesión
+  const { data: { session } } = await supabase.auth.getSession()
+
+  // 4. PROTECCIÓN DEL ADMIN (Lógica simplificada y directa)
+  if (pathname.startsWith('/admin')) {
+    const ADMIN_EMAIL = "leafarevalen@gmail.com";
+
+    // Si no está logueado, al login
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+
+    // Si el email NO es el autorizado, al perfil
+    if (session.user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      return NextResponse.redirect(new URL('/perfil', request.url))
+    }
+    
+    // Si llegó aquí es el admin, lo dejamos pasar sin tocar los idiomas
+    return response;
+  }
+
+  // 5. LÓGICA DE IDIOMAS (Para el resto de la web)
+  const handleIntl = createIntlMiddleware({
+    locales,
+    defaultLocale,
+    localePrefix
+  })
+
+  return handleIntl(request)
+}
+
+export const config = {
+  // Capturamos todo menos API y archivos del sistema
+  matcher: ['/((?!api|_next|.*\\..*).*)']
+}
+</file>
+
+</files>

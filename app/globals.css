@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-khaz-dark: #0B0F19;
+  --color-khaz-blue: #00A8FF;
+  --color-khaz-gold: #FBB03B;
+  --color-khaz-light: #F3F4F6;
+}
+
+/* Clase para la firma del logo */
+.font-signature {
+  font-family: var(--font-signature), cursive !important;
+}
+
+body {
+  background-color: var(--color-khaz-dark);
+  color: var(--color-khaz-light);
+}
+
+/* Tus efectos de brillo se quedan igual */
+.text-khaz-blue-glow {
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.5), 0 0 20px rgba(0, 168, 255, 0.2);
+}
+/* ========================================= */
+/* ANIMACIÓN DEL LOBO: RESPIRACIÓN GALÁCTICA */
+/* ========================================= */
+@keyframes neon-breathe {
+  0%, 100% { 
+    filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.2)); 
+    transform: scale(1) translateY(0px); 
+  }
+  50% { 
+    filter: drop-shadow(0 0 35px rgba(0, 168, 255, 0.7)); 
+    transform: scale(1.02) translateY(-5px); 
+  }
+}
+
+.animate-neon-breathe {
+  animation: neon-breathe 4s ease-in-out infinite;
+}
