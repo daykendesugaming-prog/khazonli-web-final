@@ -39,7 +39,7 @@ export default function EventModal({
   const displayMode = selectedEvent[`mode_name_${locale}`] || selectedEvent.mode_name;
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[#0B0F19]/95 backdrop-blur-md p-4 animate-fade-in">
+    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-[#0B0F19]/95 p-4 animate-fade-in">
       <div className="bg-[#121826] border border-gray-800 rounded-[36px] w-full max-w-4xl relative overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
         <button
           onClick={handleCloseEvent}
