@@ -148,9 +148,9 @@ export default function ExchangeSection({ routes, user, profile }: Props) {
                   placeholder={tExchange('placeholder_example_amount')}
                   value={exchangeAmount}
                   onChange={(e) => setExchangeAmount(e.target.value)}
-                  className="w-full bg-transparent text-white text-4xl font-black outline-none"
+                  className="w-full bg-transparent text-white text-4xl md:text-5xl font-black outline-none"
                 />
-                <span className="text-gray-600 font-bold">MK</span>
+                <span className="text-gray-600 font-bold text-2xl">MK</span>
               </div>
             </div>
 
