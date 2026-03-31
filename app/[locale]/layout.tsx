@@ -16,6 +16,22 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     icons: {
       icon: '/favicon.ico',
     },
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: 'https://khazonli.es',
+      siteName: 'Khaz Onli',
+      images: [
+        {
+          url: '/logo de khaz.png', // Debe estar en tu carpeta /public
+          width: 1200,
+          height: 630,
+          alt: t('title'),
+        },
+      ],
+      locale: locale === 'es' ? 'es_ES' : 'en_US',
+      type: 'website',
+    },
   };
 }
 
