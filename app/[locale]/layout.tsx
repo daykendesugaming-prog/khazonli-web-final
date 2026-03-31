@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: t('title'),
     description: t('description'),
     icons: {
-      icon: '/favicon.ico',
+      icon: '/openpeque.png',
     },
     openGraph: {
       title: t('title'),
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       siteName: 'Khaz Onli',
       images: [
         {
-          url: '/logo de khaz.png', // Debe estar en tu carpeta /public
+          url: '/opengraph-image.png', // Debe estar en tu carpeta /public
           width: 1200,
           height: 630,
           alt: t('title'),
