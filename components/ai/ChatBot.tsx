@@ -72,7 +72,7 @@ export default function ChatBot({ mode = 'bubble' }: { mode?: 'full' | 'bubble' 
   };
 
   const handleWhatsAppRedirect = () => {
-    window.open('https://wa.me/584124989220', '_blank'); // Reemplaza con tu número real
+    window.open('https://wa.me/584124989220', '_blank');
   };
 
   const ChatWindow = (
@@ -86,8 +86,8 @@ export default function ChatBot({ mode = 'bubble' }: { mode?: 'full' | 'bubble' 
             <img src="/ia5.jpg" alt="Khaz AI" className="w-full h-full object-cover" />
           </div>
           <div>
-            <h3 className="text-xs font-black text-white uppercase tracking-widest">Khaz AI</h3>
-            <p className="text-[9px] text-green-500 font-bold uppercase tracking-tighter flex items-center gap-1">
+            <h3 className="text-xs font-black text-white uppercase tracking-widest font-sans">Khaz AI</h3>
+            <p className="text-[9px] text-green-500 font-bold uppercase tracking-tighter flex items-center gap-1 font-sans">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> {t('online') || 'En línea'}
             </p>
           </div>
@@ -104,17 +104,28 @@ export default function ChatBot({ mode = 'bubble' }: { mode?: 'full' | 'bubble' 
         {messages.length === 0 && (
           <div className="text-center py-20 flex flex-col items-center opacity-40">
             <img src="/khaz-bot.png" alt="Logo" className="w-16 h-16 grayscale mb-4" />
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{t('welcome')}</p>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest font-sans">{t('welcome')}</p>
           </div>
         )}
 
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-            <div className={`max-w-[85%] p-4 rounded-[20px] text-[13px] leading-relaxed shadow-lg ${msg.role === 'user'
+            <div className={`max-w-[85%] p-4 rounded-[20px] shadow-lg ${msg.role === 'user'
               ? 'bg-[#00A8FF] text-[#0B0F19] font-black rounded-tr-none'
               : 'bg-[#1e2536] text-gray-200 border border-gray-800 rounded-tl-none'
               }`}>
-              {msg.content}
+              
+              {msg.role === 'assistant' ? (
+                // ⭐ FORMATO MEJORADO: Tailwind typography + whitespace
+                <div className="prose prose-invert prose-sm max-w-none font-sans whitespace-pre-wrap leading-relaxed tracking-wide text-[15px]">
+                  {msg.content}
+                </div>
+              ) : (
+                // FORMATO PARA USUARIO
+                <div className="whitespace-pre-wrap leading-relaxed tracking-wide text-[15px] font-sans">
+                  {msg.content}
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -132,7 +143,7 @@ export default function ChatBot({ mode = 'bubble' }: { mode?: 'full' | 'bubble' 
           <div className="flex justify-center mt-4 animate-fade-in">
             <button
               onClick={handleWhatsAppRedirect}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-2xl flex items-center gap-2 transition-all shadow-lg"
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-2xl flex items-center gap-2 transition-all shadow-lg font-sans"
             >
               <span className="text-sm">Contactar por WhatsApp</span>
             </button>
@@ -146,7 +157,7 @@ export default function ChatBot({ mode = 'bubble' }: { mode?: 'full' | 'bubble' 
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={t('placeholder')}
-          className="flex-1 bg-[#121826] border border-gray-800 rounded-2xl px-5 py-3 text-xs text-white outline-none focus:border-[#00A8FF]/50 transition-all placeholder:text-gray-600"
+          className="flex-1 bg-[#121826] border border-gray-800 rounded-2xl px-5 py-3 text-xs text-white outline-none focus:border-[#00A8FF]/50 transition-all placeholder:text-gray-600 font-sans"
         />
         <button
           type="submit"
@@ -166,15 +177,13 @@ export default function ChatBot({ mode = 'bubble' }: { mode?: 'full' | 'bubble' 
           <button
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-4 w-16 h-16 bg-[#0B0F19] rounded-full shadow-[0_0_25px_rgba(0,168,255,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[100] border-2 border-[#00A8FF]/50 p-0 overflow-hidden group"
-            style={{ insetInlineEnd: '1rem' }} // CSS lógico para RTL/LTR
+            style={{ insetInlineEnd: '1rem' }}
           >
-            {/* LA IMAGEN DEL BOT QUE ABRE EL CHAT */}
             <img
               src="/ia5.jpg"
               alt="Chat AI"
               className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
             />
-            {/* Notificación pequeña */}
             <span className="absolute top-1 right-1 w-4 h-4 bg-green-500 border-2 border-[#0B0F19] rounded-full"></span>
           </button>
         )}

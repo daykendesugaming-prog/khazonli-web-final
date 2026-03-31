@@ -63,7 +63,7 @@ export default function RatesPreviewCard({
                     <p className="text-green-400 font-black text-xs">
                       ${s.buy_rate || '0.00'}
                     </p>
-                    <p className="text-gray-500 text-[7px] font-bold">
+                    <p className="text-yellow-400 text-[10px] font-black">
                       ={((parseFloat(s.buy_rate) || 0) * (rates.buy || 0)).toFixed(2)} Bs
                     </p>
                   </div>

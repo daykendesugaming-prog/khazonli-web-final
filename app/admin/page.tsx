@@ -254,10 +254,10 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
-    if (session) {
-      refreshDashboardData();
-    }
-  }, [session, refreshDashboardData]);
+  if (session) {
+    refreshDashboardData();
+  }
+}, [session]);
 
   const wrappedDeleteServer = (serverName: string) =>
     askForConfirmation(`¿Eliminar servidor ${serverName}?`, async () => {

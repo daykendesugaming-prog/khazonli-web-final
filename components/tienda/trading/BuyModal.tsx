@@ -25,6 +25,7 @@ export default function BuyModal({
 }: BuyModalProps) {
   const t = useTranslations('TradingBoard');
   const tCommon = useTranslations('common');
+  const tBuyModal = useTranslations('BuyModal');
 
   // Estados internos
   const [buyPjName, setBuyPjName] = useState('');
@@ -114,50 +115,50 @@ export default function BuyModal({
             <input 
               type="text" 
               className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white outline-none focus:border-[#FBB03B]/50 mt-1 transition-all"
-              placeholder="Nombre de tu personaje"
+              placeholder={tBuyModal('placeholder_character')}
               value={buyPjName} 
               onChange={(e) => setBuyPjName(e.target.value)} 
             />
           </div>
 
           <div className="relative">
-            <label className="text-[10px] font-black text-gray-600 uppercase ml-1">Cantidad de MK</label>
+            <label className="text-[10px] font-black text-gray-600 uppercase ml-1">{tBuyModal('label_amount_mk')}</label>
             <input 
               type="number" 
               className={`w-full bg-[#0B0F19] border rounded-xl p-4 text-white outline-none mt-1 transition-all ${buyExceedsStock ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : 'border-gray-800 focus:border-[#FBB03B]/50'}`}
-              placeholder="¿Cuántos millones compras?"
+              placeholder={tBuyModal('placeholder_amount_mk')}
               value={buyAmount} 
               onChange={(e) => setBuyAmount(e.target.value)} 
             />
-            {buyExceedsStock && <p className="text-[9px] text-red-500 font-bold uppercase mt-1 ml-2">Supera el stock disponible</p>}
+            {buyExceedsStock && <p className="text-[9px] text-red-500 font-bold uppercase mt-1 ml-2">{tBuyModal('error_exceeds_stock')}</p>}
           </div>
 
           <div>
-            <label className="text-[10px] font-black text-gray-600 uppercase ml-1">¿Cómo nos pagarás?</label>
+            <label className="text-[10px] font-black text-gray-600 uppercase ml-1">{tBuyModal('label_payment_method')}</label>
             <select 
               className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white outline-none mt-1 text-sm font-bold uppercase"
               value={buyPaymentMethod}
               onChange={(e) => setBuyPaymentMethod(e.target.value)}
             >
-              <option value="Pago Móvil / Transferencia">Pago Móvil / Transferencia (Bs)</option>
-              <option value="Binance Pay">Binance Pay (USDT)</option>
-              <option value="Zinli">Zinli (USD)</option>
+              <option value="Pago Móvil / Transferencia">{tBuyModal('option_payment_mobile')}</option>
+              <option value="Binance Pay">{tBuyModal('option_binance')}</option>
+              <option value="Zinli">{tBuyModal('option_zinli')}</option>
             </select>
           </div>
 
           <div>
-            <label className="text-[10px] font-black text-gray-600 uppercase ml-1">Referencia o correo del pago</label>
+            <label className="text-[10px] font-black text-gray-600 uppercase ml-1">{tBuyModal('label_payment_ref')}</label>
             <input 
               type="text" 
               className="w-full bg-[#0B0F19] border border-gray-800 rounded-xl p-4 text-white outline-none focus:border-[#FBB03B]/50 mt-1"
-              placeholder="Ref 1234 o correo@ejemplo.com"
+              placeholder={tBuyModal('placeholder_payment_ref')}
               value={buyPaymentDetails} 
               onChange={(e) => setBuyPaymentDetails(e.target.value)} 
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-black text-[#FBB03B] uppercase ml-1">Tu WhatsApp *</label>
+            <label className="text-[10px] font-black text-[#FBB03B] uppercase ml-1">{tBuyModal('label_whatsapp')}</label>
             <input 
               type="tel" 
               className="w-full bg-[#0B0F19] border border-[#FBB03B]/50 rounded-xl p-4 text-white outline-none focus:border-[#FBB03B] mt-1"
@@ -169,7 +170,7 @@ export default function BuyModal({
 
           {toNumber(buyAmount) > 0 && !buyExceedsStock && (
             <div className={`p-5 rounded-2xl mt-6 border transition-all duration-500 ${isUsdPayment ? 'bg-[#FBB03B]/5 border-[#FBB03B]/30' : 'bg-[#00A8FF]/5 border-[#00A8FF]/30'}`}>
-              <p className="text-gray-400 text-[10px] font-black uppercase mb-1 text-center tracking-widest">Total a Pagar:</p>
+              <p className="text-gray-400 text-[10px] font-black uppercase mb-1 text-center tracking-widest">{tBuyModal('label_total_pay')}</p>
               <p className={`text-3xl font-black text-center ${isUsdPayment ? 'text-[#FBB03B]' : 'text-[#00A8FF]'}`}>
                 {isUsdPayment 
                   ? `${totalUsd.toFixed(2)} ${buyPaymentMethod === 'Zinli' ? 'USD' : 'USDT'}` 

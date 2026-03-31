@@ -288,7 +288,7 @@ export default function TicketsAdmin() {
                                 {order.customer_phone}
                               </p>
                               <a
-                                href={`https://wa.me/${order.customer_phone.replace(/\D/g, '')}`}
+                                href={`https://wa.me/${String(order?.customer_phone || '').replace(/\D/g, '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest bg-[#25D366]/10 text-[#25D366] px-2 py-1 rounded border border-[#25D366]/30 hover:bg-[#25D366] hover:text-black transition-colors"

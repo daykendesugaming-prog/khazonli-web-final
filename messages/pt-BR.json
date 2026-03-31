@@ -134,43 +134,43 @@
     "status_pending": "Pendente",
     "status_completed": "Concluído"
   },
- "Footer": {
-  "pro_services": "Serviços Pro",
-  "web_dev": "💻 Desenvolvimento Web",
-  "automation": "🤖 Automação",
-  "bots": "🛠️ Bots Especializados",
-  "ecosystem": "Ecossistema",
-  "terms": "📜 Termos e Condições",
-  "privacy": "🛡️ Políticas de Segurança",
-  "support": "🎧 Suporte 24/7",
-  "connect": "Conecte-se com Khaz",
-  "community": "Comunidade",
-  "rights": "© {year} KHAZONLI.ES - TODOS OS DIREITOS RESERVADOS"
-},
-"Legal": {
-  "back_home": "← Voltar ao Início",
-  "back_central": "← Voltar à Central",
-  "privacy_title": "Políticas de Segurança",
-  "support_title": "Central de Suporte",
-  "terms_title": "Termos e Condições",
-  "maintenance": "Nossa IA de suporte está em manutenção. Enquanto isso, um agente humano da Khazonli atenderá você imediatamente.",
-  "contact_btn": "💬 CONTATAR AGORA",
-  "payment_doubts": "Dúvidas sobre Pagamentos",
-  "payment_desc": "Consultas sobre taxas ou status de transferências.",
-  "pro_queries": "Serviços Pro",
-  "pro_queries_desc": "Orçamentos para bots ou desenvolvimento web."
-},
-"Metadata": {
-  "title": "Khazonli | Compra e Venda de Kamas Dofus - Entrega Instantânea",
-  "description": "A plataforma mais segura para comprar e vender Kamas de Dofus. Trocas entre servidores, serviços Pro e suporte 24/7."
-},
-"Chat": {
+  "Footer": {
+    "pro_services": "Serviços Pro",
+    "web_dev": "💻 Desenvolvimento Web",
+    "automation": "🤖 Automação",
+    "bots": "🛠️ Bots Especializados",
+    "ecosystem": "Ecossistema",
+    "terms": "📜 Termos e Condições",
+    "privacy": "🛡️ Políticas de Segurança",
+    "support": "🎧 Suporte 24/7",
+    "connect": "Conecte-se com Khaz",
+    "community": "Comunidade",
+    "rights": "© {year} KHAZONLI.ES - TODOS OS DIREITOS RESERVADOS"
+  },
+  "Legal": {
+    "back_home": "← Voltar ao Início",
+    "back_central": "← Voltar à Central",
+    "privacy_title": "Políticas de Segurança",
+    "support_title": "Central de Suporte",
+    "terms_title": "Termos e Condições",
+    "maintenance": "Nossa IA de suporte está em manutenção. Enquanto isso, um agente humano da Khazonli atenderá você imediatamente.",
+    "contact_btn": "💬 CONTATAR AGORA",
+    "payment_doubts": "Dúvidas sobre Pagamentos",
+    "payment_desc": "Consultas sobre taxas ou status de transferências.",
+    "pro_queries": "Serviços Pro",
+    "pro_queries_desc": "Orçamentos para bots ou desenvolvimento web."
+  },
+  "Metadata": {
+    "title": "Khazonli | Compra e Venda de Kamas Dofus - Entrega Instantânea",
+    "description": "A plataforma mais segura para comprar e vender Kamas de Dofus. Trocas entre servidores, serviços Pro e suporte 24/7."
+  },
+  "Chat": {
     "online": "Online",
     "welcome": "Olá, sou o Khaz AI. Como posso te ajudar hoje?",
     "placeholder": "Escreva sua dúvida...",
     "error": "Ocorreu um erro. Tente novamente."
   },
-"TradingBoard": {
+  "TradingBoard": {
     "title_sell": "Venda-nos seus",
     "title_buy": "Comprar",
     "title_swap": "Portal de Trocas",
@@ -195,20 +195,61 @@
     "placeholder_amount": "Quantidade (MK)",
     "placeholder_phone": "Ex: +58 412 1234567",
     "p2p_cta_btn": "Tem um lote grande? Propor Preço Personalizado",
-"p2p_form_title": "Lance sua Oferta",
-"p2p_form_subtitle": "Se a oferta for boa, a Khaz entrará em contato em menos de 24h.",
-"p2p_label_action": "Ação",
-"p2p_opt_sell": "Quero Vender meus Kamas",
-"p2p_opt_buy": "Quero Comprar Kamas",
-"p2p_label_server": "Servidor",
-"p2p_opt_other": "Outro (Digitar)",
-"p2p_label_custom_server": "Nome do Servidor",
-"p2p_label_amount": "Quantidade (MK)",
-"p2p_label_price": "Seu Preço (USD/MK)",
-"p2p_label_contact": "Seu WhatsApp / Discord *",
-"p2p_submit_btn": "Enviar Oferta ao Sistema",
-"p2p_alert_fill": "⚠️ Por favor, preencha todos os campos para enviar sua oferta.",
-"p2p_wa_header": "Olá Khazonli! 👋\n\nTenho uma *OFERTA P2P*.",
-"p2p_wa_deal": "Temos um acordo?"
+    "p2p_form_title": "Lance sua Oferta",
+    "p2p_form_subtitle": "Se a oferta for boa, a Khaz entrará em contato em menos de 24h.",
+    "p2p_label_action": "Ação",
+    "p2p_opt_sell": "Quero Vender meus Kamas",
+    "p2p_opt_buy": "Quero Comprar Kamas",
+    "p2p_label_server": "Servidor",
+    "p2p_opt_other": "Outro (Digitar)",
+    "p2p_label_custom_server": "Nome do Servidor",
+    "p2p_label_amount": "Quantidade (MK)",
+    "p2p_label_price": "Seu Preço (USD/MK)",
+    "p2p_label_contact": "Seu WhatsApp / Discord *",
+    "p2p_submit_btn": "Enviar Oferta ao Sistema",
+    "p2p_alert_fill": "⚠️ Por favor, preencha todos os campos para enviar sua oferta.",
+    "p2p_wa_header": "Olá Khazonli! 👋\n\nTenho uma *OFERTA P2P*.",
+    "p2p_wa_deal": "Temos um acordo?",
+    "process": "Processando",
+    "processing": "Processando",
+    "p2p_submit_btn": "Enviar Oferta ao Sistema"
+  },
+  "BuyModal": {
+    "placeholder_character": "Nome do seu personagem",
+    "label_amount_mk": "Quantidade de MK",
+    "placeholder_amount_mk": "Quantos milhões você compra?",
+    "error_exceeds_stock": "Excede o estoque disponível",
+    "label_payment_method": "Como você vai pagar?",
+    "option_payment_mobile": "Pago Móvil / Transferência (Bs)",
+    "option_binance": "Binance Pay (USDT)",
+    "option_zinli": "Zinli (USD)",
+    "label_payment_ref": "Referência ou e-mail do pagamento",
+    "placeholder_payment_ref": "Ref 1234 ou email@exemplo.com",
+    "label_whatsapp": "Seu WhatsApp *",
+    "label_total_pay": "Total a Pagar:"
+  },
+  "SellModal": {
+    "title_sell_in": "Vender em",
+    "placeholder_game_name": "Nome no jogo",
+    "label_sell_amount": "Quantos milhões você vende?",
+    "placeholder_example_amount": "Ex: 50",
+    "label_receive_method": "Método de recebimento",
+    "label_bank_details": "Seus dados bancários / Pago móvil",
+    "placeholder_bank_details": "Banco, CPF, Telefone...",
+    "label_contact_whatsapp": "WhatsApp de contato *",
+    "label_total_receive": "Você receberá exatamente:"
+  },
+  "ExchangeSection": {
+    "no_routes_available": "Não há rotas de troca ativas.",
+    "label_select_route": "1. Selecione sua Rota de Troca",
+    "label_deliver_amount": "2. Quantos Kamas você vai entregar?",
+    "placeholder_example_amount": "Ex: 50",
+    "label_will_receive": "Você receberá aproximadamente:",
+    "select_route_placeholder": "Selecione uma rota",
+    "rate_for_query": "Taxa para Consulta",
+    "manual_review_required": "Revisão manual necessária",
+    "label_whatsapp_coordinate": "3. Seu WhatsApp para coordenar *",
+    "label_amount_to_deliver": "2. Quantos Kamas você vai entregar?",
+    "label_whatsapp_contact": "3. Seu WhatsApp para coordenar *"
   }
 }
