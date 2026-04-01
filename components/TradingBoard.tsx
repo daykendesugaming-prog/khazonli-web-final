@@ -81,7 +81,7 @@ export default function TradingBoard() {
             game: s.game || 'Dofus',
             server: s.server_name || 'Desconocido',
             name: s.server_name || 'Desconocido',   // Alias para los hijos
-            rate: Number(s.buy_rate) || 0,          // Forzamos tipo Número
+            rate: Number(s.sell_rate) || 0,          // Forzamos tipo Número
             price: Number(s.buy_rate) || 0          // Alias de seguridad
           })),
           stocks: activeStocks.map((st, index) => ({
@@ -169,7 +169,7 @@ export default function TradingBoard() {
             {activeTab === 'vender' && (
               <SellSection
                 servers={data.servers}
-                dolarRate={data.rates.buy}
+                dolarRate={data.rates.sell}
                 user={data.currentUser}
                 profile={data.userProfile}
               />
