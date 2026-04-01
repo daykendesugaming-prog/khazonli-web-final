@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from 'next-intl';
+import Image from 'next/image'; // ⭐ NUEVO IMPORT
 import { renderIcon } from '@/components/tienda/utils/tiendaHelpers';
 
 type Props = {
@@ -14,7 +15,6 @@ export default function ProductCard({ item, storeStatus, onSelect }: Props) {
   const t = useTranslations('Tienda');
 
   // Lógica para descripciones y etiquetas dinámicas desde la DB
-  // Si en el futuro añades columnas en Supabase como description_en, se cargarán solas
   const displayDescription = item[`description_${locale}`] || item.description;
   const displayTag = item[`tag_${locale}`] || item.tag;
 
@@ -22,7 +22,7 @@ export default function ProductCard({ item, storeStatus, onSelect }: Props) {
     <div
       key={item.id}
       onClick={() => storeStatus === 'activo' && onSelect(item)}
-      className={`bg-[#0B0F19] border border-gray-800 rounded-3xl h-40 flex flex-col items-center justify-center transition-all group relative cursor-pointer p-4 ${
+      className={`bg-[#0B0F19] border border-gray-800 rounded-3xl h-48 flex flex-col items-center justify-center transition-all group relative cursor-pointer p-4 ${
         storeStatus === 'activo'
           ? 'hover:border-[#00A8FF]/50 hover:scale-105 hover:bg-[#121826] hover:shadow-[0_0_25px_rgba(0,168,255,0.1)]'
           : 'opacity-40 grayscale cursor-not-allowed'
@@ -47,7 +47,21 @@ export default function ProductCard({ item, storeStatus, onSelect }: Props) {
       )}
 
       <div className="relative z-10 group-hover:scale-110 transition-transform duration-300 flex-1 flex items-center justify-center w-full">
-        {renderIcon(item.icon)}
+        {item.icon && item.icon.startsWith('http') ? (
+          // ⭐ NUEVO: Contenedor con proporción fija para imágenes URL
+          <div className="relative w-full h-24 aspect-square overflow-hidden rounded-lg">
+            <Image
+              src={item.icon}
+              alt={item.name || 'Producto'}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+        ) : (
+          // ⭐ EXISTENTE: Iconos emoji/texto
+          renderIcon(item.icon)
+        )}
       </div>
 
       {displayTag && (
