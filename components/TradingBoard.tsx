@@ -22,24 +22,27 @@ interface TradingDataState {
 
 export default function TradingBoard() {
   const t = useTranslations('TradingBoard');
-  const[activeTab, setActiveTab] = useState<'vender' | 'comprar' | 'intercambiar'>('vender');
+  const [activeTab, setActiveTab] = useState<'vender' | 'comprar' | 'intercambiar'>('vender');
   const [isLoading, setIsLoading] = useState(true);
 
   const [data, setData] = useState<TradingDataState>({
     servers: [],
     stocks: [],
-    routes:[],
+    routes: [],
     rates: { buy: 0, sell: 0 },
     userProfile: null,
     currentUser: null
   });
 
   useEffect(() => {
+    let isMounted = true;
+    
     const loadInitialData = async () => {
+      if (!isMounted) return;
       setIsLoading(true);
       try {
-        // 🟢 CORRECCIÓN TÉCNICA: Consultas explícitas sin filtros SQL restrictivos para evitar el error {}
-        const[
+        // 🟢 CONSULTAS OPTIMIZADAS
+        const [
           sessionRes,
           serverRes,
           stockRes,
@@ -47,15 +50,14 @@ export default function TradingBoard() {
           ratesRes
         ] = await Promise.all([
           supabase.auth.getSession(),
-          supabase.from('mmo_servers').select('game, server_name, buy_rate, sell_rate, is_active'), 
-          supabase.from('mmo_stock').select('*'), 
+          supabase.from('mmo_servers').select('game, server_name, buy_rate, sell_rate, is_active'),
+          supabase.from('mmo_stock').select('*'),
           supabase.from('exchange_routes').select('*'),
           supabase.from('exchange_rates').select('*').order('created_at', { ascending: false }).limit(1).single(),
         ]);
 
-        // Si hay error real, lo forzamos a mostrarse en texto
         if (serverRes.error) {
-           console.error("Error en mmo_servers crudo:", JSON.stringify(serverRes.error, null, 2));
+          console.error("Error en mmo_servers:", JSON.stringify(serverRes.error, null, 2));
         }
 
         let profile = null;
@@ -70,24 +72,24 @@ export default function TradingBoard() {
           profile = p;
         }
 
-        // 🟢 FILTRADO EN CLIENTE (JavaScript puro): Evita que la base de datos se cuelgue.
-        const activeServers = (serverRes.data ||[]).filter(s => s.is_active !== false);
-        const activeStocks = (stockRes.data ||[]).filter(st => st.is_active !== false);
-        const activeRoutes = (routeRes.data ||[]).filter(r => r.is_active !== false);
+        // 🟢 FILTRADO EN CLIENTE
+        const activeServers = (serverRes.data || []).filter(s => s.is_active !== false);
+        const activeStocks = (stockRes.data || []).filter(st => st.is_active !== false);
+        const activeRoutes = (routeRes.data || []).filter(r => r.is_active !== false);
 
         setData({
           servers: activeServers.map((s, index) => ({
-            id: s.server_name || `srv_${index}`, // Clave única garantizada
+            id: s.server_name || `srv_${index}`,
             game: s.game || 'Dofus',
             server: s.server_name || 'Desconocido',
-            name: s.server_name || 'Desconocido',   // Alias para los hijos
-            rate: Number(s.sell_rate) || 0,          // Forzamos tipo Número
-            price: Number(s.buy_rate) || 0          // Alias de seguridad
+            name: s.server_name || 'Desconocido',
+            rate: Number(s.buy_rate) || 0, // ⭐ CORREGIDO: buy_rate para VENDER
+            price: Number(s.buy_rate) || 0
           })),
           stocks: activeStocks.map((st, index) => ({
             ...st,
             id: st.id || st.server_name || `stk_${index}`,
-            server: st.server_name, 
+            server: st.server_name,
             name: st.server_name
           })),
           routes: activeRoutes,
@@ -102,12 +104,56 @@ export default function TradingBoard() {
       } catch (err) {
         console.error("Excepción en loadInitialData:", err);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
+    // 1. CARGA INICIAL
     loadInitialData();
-  },[]);
+
+    // 2. WEBSOCKET PARA CAMBIOS EN TIEMPO REAL (SIN FUGAS)
+    const channel = supabase
+      .channel('trading_realtime')
+      .on('postgres_changes', 
+        { 
+          event: 'UPDATE', 
+          schema: 'public', 
+          table: 'mmo_servers',
+          filter: 'is_active=eq.true'
+        },
+        () => {
+          console.log('🔄 Cambio detectado en mmo_servers, recargando...');
+          loadInitialData();
+        }
+      )
+      .on('postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'exchange_rates'
+        },
+        () => {
+          console.log('🔄 Cambio detectado en exchange_rates, recargando...');
+          loadInitialData();
+        }
+      )
+      .subscribe();
+
+    // 3. RECARGAR SOLO CUANDO USUARIO VUELVE A LA PESTAÑA
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        loadInitialData();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-5xl mx-auto mt-8 px-4">
