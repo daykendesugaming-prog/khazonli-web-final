@@ -138,7 +138,7 @@ export default function ExchangeSection({ routes, user, profile }: Props) {
 
           {/* 2. CALCULADORA */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 border-t border-gray-800 pt-8">
-            <div className="bg-[#0B0F19] p-6 rounded-2xl border border-gray-800">
+            <div className="bg-[#0B0F19] p-6 rounded-2xl border border-gray-800 min-h-[140px] flex flex-col justify-center">
               <label className="block text-[10px] font-black text-gray-500 uppercase mb-4 tracking-widest">
                 {tExchange('label_amount_to_deliver')}
               </label>
@@ -148,7 +148,8 @@ export default function ExchangeSection({ routes, user, profile }: Props) {
                   placeholder={tExchange('placeholder_example_amount')}
                   value={exchangeAmount}
                   onChange={(e) => setExchangeAmount(e.target.value)}
-                  className="w-full bg-transparent text-white text-4xl md:text-5xl font-black outline-none"
+                  className="w-full bg-transparent text-white font-black outline-none !text-4xl !md:text-5xl placeholder:text-3xl placeholder:md:text-4xl px-2 py-3"
+
                 />
                 <span className="text-gray-600 font-bold text-2xl">MK</span>
               </div>
