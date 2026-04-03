@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -8,6 +9,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="relative w-full min-h-screen overflow-x-hidden">
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   );
