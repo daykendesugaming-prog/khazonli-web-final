@@ -13,6 +13,8 @@ interface Props {
 
 export default function BuySection({ stocks, dolarRate, user, profile }: Props) {
   const t = useTranslations('TradingBoard');
+  const tCommon = useTranslations('common'); // ← AGREGAR
+  const tBuyModal = useTranslations('BuyModal'); // ← AGREGAR
   const [selectedStock, setSelectedStock] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -104,6 +106,7 @@ export default function BuySection({ stocks, dolarRate, user, profile }: Props) 
         dolarRate={dolarRate}
         user={user}
         profile={profile}
+        translations={{ t, tCommon, tBuyModal }} // ← AGREGAR ESTA LÍNEA
       />
     </div>
   );
