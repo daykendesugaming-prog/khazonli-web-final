@@ -177,7 +177,7 @@ export default function ProductModal({
                     const commissionPct = selectedProduct.product_variants[0]?.price_usd || 0;
                     const fee = amount * (commissionPct / 100);
                     const totalUsd = amount + fee;
-                    const totalBs = totalUsd * rates.sell;
+                    const totalBs = totalUsd * rates.buy;
 
                     return (
                       <div className="pt-4 border-t border-gray-800 space-y-3">
@@ -385,7 +385,7 @@ export default function ProductModal({
                       </p>
                       <p className="text-2xl font-black text-white">
                         {isBsPayment(selectedPayment.name)
-                          ? `≈ ${(selectedVariant.is_wallet ? selectedVariant.calculated_bs : selectedVariant.price_usd * rates.sell).toFixed(2)} Bs.`
+                          ? `≈ ${(selectedVariant.is_wallet ? selectedVariant.calculated_bs : selectedVariant.price_usd * rates.buy).toFixed(2)} Bs.`
                           : `${selectedVariant.price_text} ${isZinliPayment(selectedPayment.name) ? 'USD' : 'USDT'}`}
                       </p>
                     </div>
